@@ -4,7 +4,8 @@ import axios from "@/axios";
 export function queryList(
   path,
   queryObj = {
-    cur: { type: Number, default: 1 },
+    keyword: "",
+    cur: 1,
     size: 10,
   }
 ) {
@@ -19,14 +20,9 @@ export function queryList(
   return axios.get(`/admin/${path}${query}`);
 }
 
-// 获取权限列表
-export function roleList() {
-  return axios.get("/role/list");
-}
-
 // 修改用户状态
-export function changeUserStatus(uid, status) {
-  return axios.post(`/admin/user/${uid}/changeStatus`, status, {
+export function changeStatus(module, uid, status) {
+  return axios.post(`/admin/${module}/${uid}/changeStatus`, status, {
     headers: { "Content-Type": "application/json" },
   });
 }

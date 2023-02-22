@@ -1,4 +1,5 @@
-<template><!-- 抽屉组件 -->
+<template>
+  <!-- 抽屉组件 -->
   <el-drawer v-model="showDrawer" :title="title" :size="size" :close-on-click-modal="false" :close-on-press-escape="false"
     :destory-on-close="destroyOnClose">
     <div class="formDrawer">
