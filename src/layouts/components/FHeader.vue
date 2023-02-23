@@ -22,7 +22,10 @@
 
       <el-dropdown class="dropdown" @command="handleCommand">
         <span class="el-dropdown-link">
-          欢迎使用,{{ $store.state.user.name }}
+          <el-avatar :size="32">
+            {{ $store.state.user.name.split("")[0] }}
+          </el-avatar>
+          欢迎使用，{{ $store.state.user.username }}({{ $store.state.user.name }})
           <el-icon>
             <arrow-down />
           </el-icon>
@@ -54,7 +57,7 @@
   </form-drawer>
 
   <!-- 修改个人信息抽屉 -->
-  <form-drawer ref="reProfileFormDrawerRef" title="更新个人信息" destoryOnClose @submit="reProfileSubmit">
+  <form-drawer ref="reProfileFormDrawerRef" title="更新个人信息" destoryOnClose @submit="reProfileSubmit()">
     <el-form ref="reProfileFormRef" :rules="reProfileRules" :model="reProfileObj" label-width="80px">
       <el-form-item prop="username" label="用户名">
         <el-input type="text" v-model="reProfileObj.username" placeholder="用户名" />
@@ -63,10 +66,10 @@
         <el-input type="text" v-model="reProfileObj.name" placeholder="姓名" />
       </el-form-item>
       <el-form-item label="性别">
-          <el-radio-group v-model="reProfileObj.gender">
-              <el-radio label="1">男</el-radio>
-              <el-radio label="0">女</el-radio>
-          </el-radio-group>
+        <el-radio-group v-model="reProfileObj.gender">
+          <el-radio label="1">男</el-radio>
+          <el-radio label="0">女</el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item prop="phone" label="联系方式">
         <el-input type="text" v-model="reProfileObj.phone" placeholder="联系方式" />

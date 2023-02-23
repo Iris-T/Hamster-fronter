@@ -21,18 +21,18 @@ export function queryList(
 }
 
 // 修改用户状态
-export function changeStatus(module, uid, status) {
-  return axios.post(`/admin/${module}/${uid}/changeStatus`, status, {
+export function changeStatus(module, id, status) {
+  return axios.post(`/admin/${module}/${id}/changeStatus`, status, {
     headers: { "Content-Type": "application/json" },
   });
 }
 
 // 新增用户信息
-export function userAdd(user) {
-  return axios.post("/admin/user/add", user);
+export function moduleObjAdd(module, obj) {
+  return axios.post(`/admin/${module}/add`, obj);
 }
 
 // 修改用户信息
-export function userUpdate(uid, user) {
-  return axios.post(`/admin/user/${uid}/update`, user);
+export function moduleObjUpdate(module, id, obj) {
+  return axios.post(`/admin/${module}/${id}/update`, obj);
 }

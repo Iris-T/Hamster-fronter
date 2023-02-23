@@ -47,7 +47,7 @@ export function tableDataInit(opt = {}) {
           opt.onGetListSuccess(res);
         } else {
           total.value = res.data.data.total;
-          roles.valid = res.data.data.roles;
+          roles.value = res.data.data.roles;
         }
       })
       .finally(() => (loading.value = false));
@@ -104,7 +104,7 @@ export function formDataInit(opt = {}) {
       }
       formDrawerRef.value.showLoading();
       const func =
-        optId.value != 0 ? opt.update(optId.value, form) : opt.create(form);
+        optId.value != 0 ? opt.update(opt.module, optId.value, form) : opt.create(opt.module, form);
       func
         .then((res) => {
           if (res.data.code == 200) {

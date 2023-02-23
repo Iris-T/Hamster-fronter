@@ -90,3 +90,29 @@ export function isEmail(str) {
 export function isPositiveFloat(num) {
   return /[1-9]\\d*\\.\\d*|0\\.\\d*[1-9]\\d*$/.test(num);
 }
+
+// 毫秒转日期字符串
+export function ms2LocalDateStr(ms = { type: Number }) {
+  var str = new Date(ms).toLocaleString;
+  return str;
+}
+
+export function getTimestampConversion(timestamp) {
+  let timeStamp;
+  let timeStampLen = timestamp.toString().length;
+  if (timeStampLen === 10) {
+    timeStamp = timestamp * 1000;
+  } else if (timeStampLen === 13) {
+    timeStamp = timestamp;
+  } else {
+    timeStamp = timestamp;
+  }
+  let date = new Date(timeStamp); // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
+  let Y = date.getFullYear() + "-";
+  let M = (date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1) + "-";
+  let D = date.getDate() < 10 ? "0" + date.getDate() + " " : date.getDate() + " ";
+  let h = date.getHours() < 10 ? "0" + date.getHours() + ":" : date.getHours() + ":";
+  let m = date.getMinutes() < 10 ? "0" + date.getMinutes() + ":" : date.getMinutes() + ":";
+  let s = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+  return Y + M + D + h + m + s;
+}

@@ -115,6 +115,7 @@
         <div class="flex items-center justify-center mt-5">
             <el-pagination background layout="prev, pager, next" :total="total" :current-page="queryObj.cur"
                 :page-size="queryObj.size" @current-change="getData()" />
+            <small class="ml-6 text-gray-500">共{{ total }}条数据</small>
         </div>
 
         <FormDrawer ref="formDrawerRef" :title="drawerTitle" destoryOnClose @submit="handleSubmit()">
@@ -159,7 +160,7 @@
 </template>
 
 <script setup>
-import { queryList, changeStatus, userUpdate, userAdd } from "@/api/admin";
+import { queryList, changeStatus, moduleObjAdd, moduleObjUpdate } from "@/api/admin";
 import { checkIdNo, checkUsername } from "@/api/common";
 import { ref } from "vue";
 import {
@@ -171,6 +172,8 @@ import {
 import FormDrawer from "@/layouts/components/FormDrawer.vue";
 import { tableDataInit, formDataInit } from "@/composables/useCommon";
 
+const module = "user";
+const path = "user/list";
 const rules = {
     phone: [
         { required: true, message: "联系方式不能为空", trigger: "blur" },
@@ -217,8 +220,8 @@ const {
     getData,
     handleStatusChange
 } = tableDataInit({
-    module: "/user",
-    funcPath: "/user/list",
+    module: module,
+    funcPath: path,
     queryObj: {
         keyword: "",
         gender: "",
@@ -249,6 +252,7 @@ const {
     handleUpdate,
     handleSubmit
 } = formDataInit({
+    module: module,
     form: {
         rid: null,
         role: null,
@@ -262,7 +266,7 @@ const {
         status: "0",
     },
     getData,
-    create: userAdd,
-    update: userUpdate,
+    create: moduleObjAdd,
+    update: moduleObjUpdate,
 });
 </script>

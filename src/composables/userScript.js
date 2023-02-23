@@ -135,6 +135,7 @@ export function useReProfile() {
         })
         .finally(() => {
           formDrawerRef.value.hideLoading();
+          formDrawerRef.value.close();
         });
     });
   };
