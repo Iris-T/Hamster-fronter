@@ -1,11 +1,10 @@
 import { ref, reactive } from "vue";
-import { logout, reProfile, rePwd, userinfo } from "../api/user";
+import { logout, reProfile, rePwd, userinfo } from "@/api/user";
 import { showModel, success, error } from "@/composables/util";
-import { useRouter } from "vue-router";
+import { router } from "@/router";
 import { useStore } from "vuex";
 
 export function useRePwd() {
-  const router = useRouter();
   const store = useStore();
   const formDrawerRef = ref(null);
   const formRef = ref(null);
@@ -153,19 +152,17 @@ export function useReProfile() {
 }
 
 export function useLogout() {
-  const router = useRouter();
   const store = useStore();
 
   function handleLogout() {
-    showModel("确认退出?")
-      .then((res) => {
-        logout().finally(() => {
-          store.dispatch("logout");
-          router.push("/login");
-          success("注销成功");
-        });
-      })
-      .catch(() => {});
+    showModel("确认退出?").then((res) => {
+      logout().finally(() => {
+        router.replace({path: "/login"});
+        location.reload();
+        store.dispatch("logout");
+        success("注销成功");
+      });
+    });
   }
 
   return {

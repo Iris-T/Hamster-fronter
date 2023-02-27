@@ -1,7 +1,7 @@
 <template>
   <el-row class="login-container">
     <el-col :lg="14" :md="12" class="left">
-      <el-image :src="logo" />
+      <el-image :src="logo"/>
       <div class="title">仓鼠物流运输管理系统</div>
     </el-col>
     <el-col :lg="10" :md="12" class="right">
@@ -24,12 +24,7 @@
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input
-            v-model="form.password"
-            type="password"
-            show-password
-            placeholder="请输入密码"
-          >
+          <el-input v-model="form.password" type="password" show-password placeholder="请输入密码">
             <template #prefix>
               <el-icon>
                 <Lock />
@@ -38,15 +33,8 @@
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-button
-            :loading="loading"
-            color="#8b5cf6"
-            class="w-[250px]"
-            type="primary"
-            round
-            @click="onSubmit"
-            >登 录</el-button
-          >
+          <el-button :loading="loading" color="#8b5cf6" class="w-[250px]" type="primary" round @click="onSubmit">登
+            录</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -99,9 +87,9 @@ const onSubmit = () => {
       .then((res) => {
         // 提示信息
         if (res.code === 200) {
-          success(res.msg);
           // 跳转到主页
           router.push("/");
+          success(res.msg);
         } else {
           error(res.msg);
         }

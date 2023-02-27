@@ -20,10 +20,10 @@ export default defineConfig({
     // open: true,
     // 允许跨域
     cors: true,
-    host: 'localhost',
+    host: 'hamster',
     proxy: {
       '/api': {
-        target: 'http://localhost:8888',
+        target: 'http://hamster-backend:8888',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }

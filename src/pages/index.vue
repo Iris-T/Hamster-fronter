@@ -50,11 +50,11 @@
 
     <el-row :gutter="20" class="flex">
       <el-col :span="12" :offset="0">
-        <IndexChart />
+        <IndexChart v-permission="['sys:board']" />
       </el-col>
       <el-col :span="12" :offset="0">
-        <IndexCard title="系统登记车辆信息展示" tip="查看详细信息" :info="car" />
-        <IndexCard title="系统登记仓库信息展示" tip="查看详细信息" :info="wh" />
+        <IndexCard v-permission="['sys:board']" title="系统登记车辆信息展示" tip="查看详细信息" :info="car" />
+        <IndexCard v-permission="['sys:board']" title="系统登记仓库信息展示" tip="查看详细信息" :info="wh" />
       </el-col>
     </el-row>
   </div>
@@ -81,7 +81,7 @@ getInfo()
     } else {
       error(res.data.msg);
     }
-  })
+  });
 
 facility()
   .then((res) => {
@@ -91,5 +91,5 @@ facility()
     } else {
       error(res.data.msg);
     }
-  })
+  });
 </script>

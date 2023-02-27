@@ -26,7 +26,7 @@ export function tableDataInit(opt = {}) {
       .then((res) => {
         if (res.data.code === 200) {
           success(res.data.msg);
-          row.status = status;
+          getData(queryObj);
         } else {
           warning(res.data.msg);
         }

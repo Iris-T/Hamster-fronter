@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import { login, userinfo, logout } from "@/api/user";
+import { login, userinfo } from "@/api/user";
 
 // 创建一个新的 store 实例
 const store = createStore({
@@ -60,13 +60,12 @@ const store = createStore({
     },
     // 退出登录,删除信息
     logout({ commit }) {
-      logout();
       localStorage.removeItem("authorization");
       localStorage.removeItem("tabList");
       commit("SET_USERINFO", {});
       commit("SET_AUTHORITY", []);
       commit("SET_MENU", []);
-    },
+    }
   },
 });
 

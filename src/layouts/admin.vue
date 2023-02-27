@@ -9,7 +9,7 @@
             </el-aside>
             <el-main>
                 <FTagList />
-                <router-view v-slot="{ Component }">
+                <router-view v-slot="{ Component }" :key="$route.fullPath">
                     <transition name="fade">
                         <keep-alive :max="10">
                             <component :is="Component"></component>
@@ -18,14 +18,13 @@
                 </router-view>
             </el-main>
         </el-container>
-
     </el-container>
 </template>
 
 <script setup>
-import FHeader from './components/FHeader.vue';
-import FMenu from './components/FMenu.vue';
-import FTagList from './components/FTagList.vue';
+import FHeader from '@/layouts/components/FHeader.vue';
+import FMenu from '@/layouts/components/FMenu.vue';
+import FTagList from '@/layouts/components/FTagList.vue';
 </script>
 
 <style lang="postcss" scoped>

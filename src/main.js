@@ -6,15 +6,16 @@ import App from "@/App.vue";
 import { router } from "@/router";
 import store from "@/store";
 import "virtual:windi.css";
-import "./permission";
+import "@/permission";
 import "default-passive-events";
+import permission from "@/directives/permission";
 
 const app = createApp(App);
-for (const [key, component] of Object.entries(ElementPlusIconVue)) {
-  app.component(key, component);
-}
-
+app.use(permission);
 app.use(router);
 app.use(store);
 app.use(ElementPlus);
+for (const [key, component] of Object.entries(ElementPlusIconVue)) {
+  app.component(key, component);
+}
 app.mount("#app");
