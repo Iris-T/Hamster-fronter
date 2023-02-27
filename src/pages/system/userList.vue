@@ -106,8 +106,20 @@
             </el-table-column>
             <el-table-column label="操作" align="center" width="160">
                 <template #default="scope">
-                    <small v-if="scope.row.role == '系统管理员'">该用户不可被修改</small>
-                    <el-button v-else type="primary" size="small" text @click="handleUpdate(scope.row)">修改信息</el-button>
+                    <div class="epicon">
+                        <el-tooltip content="查看" placement="bottom">
+                            <el-icon @click="openInfoDrawer(scope.row)">
+                                <View />
+                            </el-icon>
+                        </el-tooltip>
+                    </div>
+                    <div class="epicon" v-if="scope.row.role !== '系统管理员'" @click="handleUpdate(scope.row)">
+                        <el-tooltip content="修改" placement="bottom">
+                            <el-icon>
+                                <Edit />
+                            </el-icon>
+                        </el-tooltip>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>
@@ -150,12 +162,27 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="用户状态" prop="status">
-                    <el-switch :modelValue="form.status" active-value="0" inactive-value="1"
-                        @change="form.status = form.status == '0' ? '1' : '0'"></el-switch>
-                </el-form-item>
             </el-form>
         </FormDrawer>
+
+        <InfoDrawer ref="infoDrawerRef" title="用户详细信息" destoryOnClose>
+            <el-descriptions :title="info.name" :column="3" size="large">
+                <el-descriptions-item label="姓名" align="left">{{ info.name }}</el-descriptions-item>
+                <el-descriptions-item label="用户名" align="left">{{ info.username }}</el-descriptions-item>
+                <el-descriptions-item label="用户角色" align="left">{{ info.role }}</el-descriptions-item>
+                <el-descriptions-item label="性别" align="left">{{ info.gender === '1' ? '男' : '女' }}</el-descriptions-item>
+                <el-descriptions-item label="联系方式" align="left">{{ info.phone }}</el-descriptions-item>
+                <el-descriptions-item label="身份信息" align="left">{{ info.idNo }}</el-descriptions-item>
+            </el-descriptions>
+            <el-descriptions :column="1" size="large">
+                <el-descriptions-item label="创建时间" align="left">{{ getTimestampConversion(info.createTime) }},{{
+                    info.createBy ?
+                    info.createBy : "系统原始" }}创建</el-descriptions-item>
+                <el-descriptions-item label="最近更新" align="left">{{ getTimestampConversion(info.createTime) }},{{
+                    info.createBy ?
+                    info.createBy : "系统原始" }}更新</el-descriptions-item>
+            </el-descriptions>
+        </InfoDrawer>
     </el-card>
 </template>
 
@@ -168,9 +195,11 @@ import {
     extractColorByName,
     isPhoneNo,
     isChinaIdNo,
+    getTimestampConversion
 } from "@/composables/util";
 import FormDrawer from "@/layouts/components/FormDrawer.vue";
-import { tableDataInit, formDataInit } from "@/composables/useCommon";
+import InfoDrawer from "@/layouts/components/InfoDrawer.vue";
+import { tableDataInit, formDataInit, infoDataInit } from "@/composables/useCommon";
 
 const module = "user";
 const path = "user/list";
@@ -264,9 +293,42 @@ const {
         phone: "",
         address: "",
         status: "0",
+        createBy: "",
+        createTime: 0,
+        updateBy: "",
+        updateTime: 0,
     },
     getData,
     create: moduleObjAdd,
     update: moduleObjUpdate,
 });
+const {
+    infoDrawerRef,
+    info,
+    openInfoDrawer
+} = infoDataInit({
+    info: {
+        rid: null,
+        role: null,
+        username: "",
+        password: "",
+        name: "",
+        gender: "",
+        idNo: "",
+        phone: "",
+        address: "",
+        status: "0",
+        createBy: "",
+        createTime: 0,
+        updateBy: "",
+        updateTime: 0
+    }
+})
 </script>
+
+<style lang="postcss" scoped>
+.epicon {
+    @apply ml-2 mr-2;
+    display: inline !important;
+}
+</style>

@@ -92,11 +92,6 @@ export function isPositiveFloat(num) {
 }
 
 // 毫秒转日期字符串
-export function ms2LocalDateStr(ms = { type: Number }) {
-  var str = new Date(ms).toLocaleString;
-  return str;
-}
-
 export function getTimestampConversion(timestamp) {
   let timeStamp;
   let timeStampLen = timestamp.toString().length;

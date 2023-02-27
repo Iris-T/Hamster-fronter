@@ -38,42 +38,47 @@
         </div>
 
         <el-table :data="tableData" style="width: 100%" v-loading="loading" size="small">
+
             <el-table-column label="角色名称" align="center">
                 <template #default="{ row }">
-                    {{ row.name }}
+                    <span>{{ row.name }}</span>
                 </template>
             </el-table-column>
+
             <el-table-column label="关键字" align="center">
                 <template #default="{ row }">
-                    {{ row.rkey }}
-                </template>
-            </el-table-column>
-            <el-table-column label="创建时间" align="center">
-                <template #default="{ row }">
-                    {{ getTimestampConversion(row.createTime) }}
-                </template>
-            </el-table-column>
-            <el-table-column label="最近一次更新" align="center">
-                <template #default="{ row }">
-                    {{ getTimestampConversion(row.updateTime) }}
+                    <span>{{ row.rkey }}</span>
                 </template>
             </el-table-column>
             <el-table-column label="备注说明" align="center">
                 <template #default="{ row }">
-                    {{ row.remark }}
+                    <span>{{ row.remark }}</span>
                 </template>
             </el-table-column>
             <el-table-column label="角色状态" align="center" width="100">
                 <template #default="{ row }">
                     <el-switch :modelValue="row.status" :active-value="'0'" :inactive-value="'1'"
-                        @change="handleStatusChange(row, $event)" :loading="row.statusLoading" :disabled="row.name == '系统管理员'">
+                        @change="handleStatusChange(row, $event)" :loading="row.statusLoading"
+                        :disabled="row.name == '系统管理员'">
                     </el-switch>
                 </template>
             </el-table-column>
             <el-table-column label="操作" align="center" width="160">
                 <template #default="scope">
-                    <small v-if="scope.row.name == '系统管理员'">该角色不可被修改</small>
-                    <el-button v-else type="primary" size="small" text @click="handleUpdate(scope.row)">修改信息</el-button>
+                    <div class="epicon">
+                        <el-tooltip content="查看" placement="bottom">
+                            <el-icon @click="openInfoDrawer(scope.row)">
+                                <View />
+                            </el-icon>
+                        </el-tooltip>
+                    </div>
+                    <div class="epicon" v-if="scope.row.name !== '系统管理员'" @click="handleUpdate(scope.row)">
+                        <el-tooltip content="修改" placement="bottom">
+                            <el-icon>
+                                <Edit />
+                            </el-icon>
+                        </el-tooltip>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>
@@ -85,7 +90,8 @@
         </div>
 
         <FormDrawer ref="formDrawerRef" :title="drawerTitle" destoryOnClose @submit="handleSubmit()">
-            <el-form :model="form" ref="formRef" :rules="rules" :validate-on-rule-change="false" label-width="80px">
+            <el-form :model="form" ref="formRef" :rules="optId == 0 ? addRoleRules : updateRoleRules"
+                :validate-on-rule-change="false" label-width="80px">
                 <el-form-item label="角色名称" prop="name">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
@@ -95,21 +101,45 @@
                 <el-form-item label="角色备注" prop="remark">
                     <el-input v-model="form.remark" placeholder="建议对角色权限做简单介绍"></el-input>
                 </el-form-item>
-                <el-form-item label="启用状态" prop="status">
-                    <el-switch :modelValue="form.status" active-value="0" inactive-value="1"
-                        @change="form.status = form.status == '0' ? '1' : '0'"></el-switch>
-                </el-form-item>
             </el-form>
         </FormDrawer>
+
+        <InfoDrawer ref="infoDrawerRef" title="角色详细信息" destoryOnClose>
+            <el-descriptions :title="info.name" :column="2" size="large">
+                <el-descriptions-item label="关键字" align="left">{{ info.rkey }}</el-descriptions-item>
+                <el-descriptions-item label="备注" align="left">{{ info.remark }}</el-descriptions-item>
+            </el-descriptions>
+            <el-descriptions :column="1" size="large">
+                <el-descriptions-item label="创建时间" align="left">{{ getTimestampConversion(info.createTime) }},{{
+                    info.createBy ?
+                    info.createBy : "系统原始" }}创建</el-descriptions-item>
+                <el-descriptions-item label="最近更新" align="left">{{ getTimestampConversion(info.createTime) }},{{
+                    info.createBy ?
+                    info.createBy : "系统原始" }}更新</el-descriptions-item>
+            </el-descriptions>
+            <el-descriptions :column="1" size="large">
+                <el-descriptions-item label="操作菜单">
+                    <span v-show="info.perms" v-for="p in info.perms" :key="p.id">
+                        <el-tag v-show="p.isMenu === '0'" type="success" size="normal" effect="plain" round>{{ p.name
+                        }}</el-tag>
+                    </span>
+                </el-descriptions-item>
+                <el-descriptions-item label="权限功能">
+                    <span v-show="p.status === '0'" v-for="p in info.perms" :key="p.id">
+                        <el-tag v-show="p.isMenu === '1'" type="" size="normal" effect="plain" round>{{ p.name }}</el-tag>
+                    </span>
+                </el-descriptions-item>
+            </el-descriptions>
+        </InfoDrawer>
     </el-card>
 </template>
 
 <script setup>
 import { queryList, changeStatus, moduleObjAdd, moduleObjUpdate } from "@/api/admin";
-import { ref } from "vue";
-import { error, ms2LocalDateStr, getTimestampConversion } from "@/composables/util";
+import { error, getTimestampConversion } from "@/composables/util";
 import FormDrawer from "@/layouts/components/FormDrawer.vue";
-import { tableDataInit, formDataInit } from "@/composables/useCommon";
+import InfoDrawer from "@/layouts/components/InfoDrawer.vue";
+import { tableDataInit, formDataInit, infoDataInit } from "@/composables/useCommon";
 
 const module = "role";
 const path = "role/list";
@@ -143,6 +173,7 @@ const {
     }
 });
 const {
+    optId,
     formDrawerRef,
     formRef,
     form,
@@ -154,12 +185,44 @@ const {
     module: module,
     form: {
         name: "",
-        rKey: "",
+        rkey: "",
         remark: "",
+        perms: [{}],
+        createBy: "",
+        createTime: 0,
+        updateBy: "",
+        updateTime: 0,
         status: "0"
     },
     getData,
     create: moduleObjAdd,
     update: moduleObjUpdate,
 });
+const {
+    infoDrawerRef,
+    info,
+    openInfoDrawer
+} = infoDataInit({
+    info: {
+        name: "",
+        rkey: "",
+        remark: "",
+        perms: [{}],
+        createBy: "",
+        createTime: 0,
+        updateBy: "",
+        updateTime: 0,
+        status: "0"
+    }
+})
+
+const addRoleRules = {}
+const updateRoleRules = {}
 </script>
+
+<style lang="postcss" scoped>
+.epicon {
+    @apply ml-2 mr-2;
+    display: inline !important;
+}
+</style>

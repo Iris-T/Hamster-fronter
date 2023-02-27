@@ -22,7 +22,8 @@ export function tableDataInit(opt = {}) {
   // 更新状态
   const handleStatusChange = (row, status) => {
     row.statusLoading = true;
-    opt.changeStatus(opt.module, row.id, status)
+    opt
+      .changeStatus(opt.module, row.id, status)
       .then((res) => {
         if (res.data.code === 200) {
           success(res.data.msg);
@@ -61,10 +62,10 @@ export function tableDataInit(opt = {}) {
     total,
     resetQueryObj,
     getData,
-    handleStatusChange
+    handleStatusChange,
   };
 }
-// 新增用户
+// 新增、修改对象信息
 export function formDataInit(opt = {}) {
   const optId = ref(0);
   const formDrawerRef = ref(null);
@@ -72,7 +73,7 @@ export function formDataInit(opt = {}) {
   const defualtForm = opt.form;
   const form = reactive({});
   const drawerTitle = computed(() =>
-    optId.value == 0 ? "新增用户" : optId.value < 0 ? "详细信息" : "修改用户"
+    optId.value == 0 ? "新增用户" : "修改用户"
   );
 
   // 设置表单数据
@@ -104,7 +105,9 @@ export function formDataInit(opt = {}) {
       }
       formDrawerRef.value.showLoading();
       const func =
-        optId.value != 0 ? opt.update(opt.module, optId.value, form) : opt.create(opt.module, form);
+        optId.value != 0
+          ? opt.update(opt.module, optId.value, form)
+          : opt.create(opt.module, form);
       func
         .then((res) => {
           if (res.data.code == 200) {
@@ -124,6 +127,7 @@ export function formDataInit(opt = {}) {
   };
 
   return {
+    optId,
     formDrawerRef,
     formRef,
     form,
@@ -131,5 +135,33 @@ export function formDataInit(opt = {}) {
     handleCreate,
     handleUpdate,
     handleSubmit,
+  };
+}
+
+// 查看对象信息
+export function infoDataInit(opt = {}) {
+  const infoDrawerRef = ref(null);
+  const info = reactive({});
+  const defualtInfo = opt.info;
+
+  // 设置查阅信息数据
+  function resetInfo(row = false) {
+    if (row) {
+      for (const k in defualtInfo) {
+        info[k] = row[k];
+      }
+    }
+  }
+
+  // 打开InfoDrawer
+  const openInfoDrawer = (row) => {
+    resetInfo(row);
+    infoDrawerRef.value.open();
+  };
+
+  return {
+    infoDrawerRef,
+    info,
+    openInfoDrawer,
   };
 }

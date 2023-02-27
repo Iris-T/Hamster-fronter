@@ -60,13 +60,23 @@ const handleSelect = (e) => {
   bottom: 0;
   left: 0;
   overflow: auto;
-  @apply shadow-sm fixed bg-light-100;
+  @apply shadow-sm fixed bg-light-200;
 }
+
 .f-menu::-webkit-scrollbar {
   width: 0;
 }
+
 .el-submenu .el-menu-item {
-  min-width: 200px!important;
-  max-width: 200px!important;
+  min-width: 200px !important;
+  max-width: 200px !important;
+}
+
+.el-menu-item.is-active {
+  color: #6366f1!important;
+
+  span {
+    color: #6366f1!important;
+  }
 }
 </style>
