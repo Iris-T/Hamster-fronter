@@ -1,6 +1,6 @@
 <template>
     <el-row :gutter="20" class="mt-5">
-        <el-col v-permission="item.perms" :span="4" :offset="0" v-for="(item, index) in navs" :key="index">
+        <el-col v-permission="item.perms" :span="3" :offset="0" v-for="(item, index) in navs" :key="index">
             <el-card shadow="hover" @click="$router.push(item.path)">
                 <div class="flex flex-col items-center justify-center cursor-pointer">
                     <el-icon :size="25" :class="item.color">
@@ -16,43 +16,57 @@
 <script setup>
 const navs = [
     {
+        icon: "Position",
+        title: "系统角色",
+        path: "/role/list",
+        color: "text-blue-500",
+        perms: ['admin', 'role:manage']
+    },
+    {
+        icon: "Pointer",
+        title: "系统权限",
+        path: "/perms/list",
+        color: "text-sky-500",
+        perms: ['admin', 'perms:manage']
+    },
+    {
         icon: "User",
-        title: "用户",
+        title: "用户数据",
         path: "/user/list",
         color: "text-indigo-500",
         perms: ['admin', 'user:manage']
     },
     {
         icon: "Service",
-        title: "合作伙伴",
+        title: "客户数据",
         path: "/co/list",
-        color: "text-blue-500",
+        color: "text-cyan-500",
         perms: ['admin', 'co:manage']
     },
     {
         icon: "Van",
-        title: "车辆",
+        title: "车辆数据",
         path: "/vehicel/list",
-        color: "text-sky-500",
+        color: "text-green-500",
         perms:['admin', 'vehicel:manage']
     },
     {
         icon: "Box",
-        title: "货物",
+        title: "货物数据",
         path: "/cargo/list",
-        color: "text-teal-500",
+        color: "text-amber-500",
         perms:['admin', 'cargo:manage']
     },
     {
         icon: "Location",
-        title: "运输",
+        title: "运输数据",
         path: "/trans/list",
         color: "text-green-500",
         perms: ['admin', 'trans:manage']
     },
     {
         icon: "Money",
-        title: "财务",
+        title: "财务数据",
         path: "/finance/list",
         color: "text-rose-500",
         perms: ['admin', 'finance:manage']

@@ -1,14 +1,16 @@
 import axios from "@/axios";
 
-// 获取用户列表
-export function queryList(
-  path,
-  queryObj = {
-    keyword: "",
-    cur: 1,
-    size: 10,
-  }
-) {
+// 重置对象密码
+export function resetUserPwd(id) {
+  return axios.post(`/admin/user/${id}/pwd/reset`);
+}
+
+// 获取对象列表
+export function queryList(path, queryObj = {
+  keyword: "",
+  cur: 1,
+  size: 10
+}) {
   let q = [];
   for (const key in queryObj) {
     if (queryObj[key]) {
@@ -20,19 +22,19 @@ export function queryList(
   return axios.get(`/admin/${path}${query}`);
 }
 
-// 修改用户状态
+// 修改对象状态
 export function changeStatus(module, id, status) {
   return axios.post(`/admin/${module}/${id}/changeStatus`, status, {
     headers: { "Content-Type": "application/json" },
   });
 }
 
-// 新增用户信息
+// 新增对象信息
 export function moduleObjAdd(module, obj) {
   return axios.post(`/admin/${module}/add`, obj);
 }
 
-// 修改用户信息
+// 修改对象信息
 export function moduleObjUpdate(module, id, obj) {
   return axios.post(`/admin/${module}/${id}/update`, obj);
 }

@@ -22,9 +22,6 @@
 
       <el-dropdown class="dropdown" @command="handleCommand">
         <span class="el-dropdown-link">
-          <el-avatar :size="32">
-            {{ $store.state.user.name.split("")[0] }}
-          </el-avatar>
           欢迎使用，{{ $store.state.user.username }}({{ $store.state.user.name }})
           <el-icon>
             <arrow-down />

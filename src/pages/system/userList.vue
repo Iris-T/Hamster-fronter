@@ -106,14 +106,14 @@
             </el-table-column>
             <el-table-column label="操作" align="center" width="160">
                 <template #default="scope">
-                    <div class="epicon">
+                    <div class="op-icon">
                         <el-tooltip content="查看" placement="bottom">
                             <el-icon @click="openInfoDrawer(scope.row)">
                                 <View />
                             </el-icon>
                         </el-tooltip>
                     </div>
-                    <div class="epicon" v-if="scope.row.role !== '系统管理员'" @click="handleUpdate(scope.row)">
+                    <div class="op-icon" v-if="scope.row.role !== '系统管理员'" @click="handleUpdate(scope.row)">
                         <el-tooltip content="修改" placement="bottom">
                             <el-icon>
                                 <Edit />
@@ -126,7 +126,7 @@
 
         <div class="flex items-center justify-center mt-5">
             <el-pagination background layout="prev, pager, next" :total="total" :current-page="queryObj.cur"
-                :page-size="queryObj.size" @current-change="getData()" />
+                :page-size="queryObj.size" @current-change="getData" />
             <small class="ml-6 text-gray-500">共{{ total }}条数据</small>
         </div>
 
@@ -136,7 +136,8 @@
                     <el-input v-model="form.username"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="password">
-                    <el-input v-model="form.password" placeholder="默认密码为123456"></el-input>
+                    <el-input v-if="optId === 0" v-model="form.password" placeholder="默认密码为用户证件信息后6位" />
+                    <el-button v-else type="primary" size="" round @click="handleResetUserPwd(optId)">重置密码</el-button>
                 </el-form-item>
                 <el-form-item label="姓名" prop="name">
                     <el-input v-model="form.name"></el-input>
@@ -166,8 +167,8 @@
         </FormDrawer>
 
         <InfoDrawer ref="infoDrawerRef" title="用户详细信息" destoryOnClose>
-            <el-descriptions :title="info.name" :column="3" size="large">
-                <el-descriptions-item label="姓名" align="left">{{ info.name }}</el-descriptions-item>
+            <el-descriptions :title="info.name" :column="2" size="large">
+                <el-descriptions-item label="编号" align="left">{{ info.id }}</el-descriptions-item>
                 <el-descriptions-item label="用户名" align="left">{{ info.username }}</el-descriptions-item>
                 <el-descriptions-item label="用户角色" align="left">{{ info.role }}</el-descriptions-item>
                 <el-descriptions-item label="性别" align="left">{{ info.gender === '1' ? '男' : '女' }}</el-descriptions-item>
@@ -187,8 +188,9 @@
 </template>
 
 <script setup>
-import { queryList, changeStatus, moduleObjAdd, moduleObjUpdate } from "@/api/admin";
+import { queryList, changeStatus, moduleObjAdd, moduleObjUpdate, resetUserPwd } from "@/api/admin";
 import { checkIdNo, checkUsername } from "@/api/common";
+import { success, showModel } from "@/composables/util";
 import { ref } from "vue";
 import {
     error,
@@ -255,7 +257,9 @@ const {
         keyword: "",
         gender: "",
         status: "",
-        rid: ""
+        rid: "",
+        cur: 1,
+        size: 10
     },
     getList: queryList,
     changeStatus: changeStatus,
@@ -273,6 +277,7 @@ const {
     }
 });
 const {
+    optId,
     formDrawerRef,
     formRef,
     form,
@@ -308,6 +313,7 @@ const {
     openInfoDrawer
 } = infoDataInit({
     info: {
+        id: null,
         rid: null,
         role: null,
         username: "",
@@ -324,11 +330,20 @@ const {
         updateTime: 0
     }
 })
-</script>
 
+const handleResetUserPwd = (id) => {
+    showModel("是否确认重置用户密码?").then((res) => {
+        resetUserPwd(id).then((res) => success(res.data.msg));
+    })
+}
+</script>
 <style lang="postcss" scoped>
-.epicon {
-    @apply ml-2 mr-2;
-    display: inline !important;
+:deep(.el-descriptions__title) {
+    font-size: 24px !important;
+}
+
+:deep(.el-descriptions__label) {
+    @apply text-gray-600;
+    font-weight: bolder !important;
 }
 </style>

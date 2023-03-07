@@ -7,6 +7,7 @@ import CoList from "@/pages/co/list.vue";
 import UserList from "@/pages/system/userList.vue";
 import RoleList from "@/pages/system/roleList.vue";
 import PermsList from "@/pages/system/permsList.vue";
+import SysField from "@/pages/system/SysField.vue"; 
 import Admin from "@/layouts/admin.vue";
 
 // 默认路由,所有用户共享
@@ -72,6 +73,14 @@ const asyncRoutes = [
       title: "权限管理",
     },
   },
+  {
+    path: "/sys/field",
+    name: "SysField",
+    component: SysField,
+    meta: {
+      title: "系统数据",
+    },
+  }
 ];
 
 export const router = createRouter({
@@ -90,8 +99,8 @@ export function addRoutes(menus) {
         router.addRoute("Admin", item);
       }
       // 嵌套查找
-      if (node.child && node.child.length > 0) {
-        findRoutes(node.child);
+      if (node.children && node.children.length > 0) {
+        findRoutes(node.children);
       }
     });
   };

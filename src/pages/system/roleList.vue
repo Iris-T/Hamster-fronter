@@ -65,14 +65,14 @@
             </el-table-column>
             <el-table-column label="操作" align="center" width="160">
                 <template #default="scope">
-                    <div class="epicon">
+                    <div class="op-icon">
                         <el-tooltip content="查看" placement="bottom">
                             <el-icon @click="openInfoDrawer(scope.row)">
                                 <View />
                             </el-icon>
                         </el-tooltip>
                     </div>
-                    <div class="epicon" v-if="scope.row.name !== '系统管理员'" @click="handleUpdate(scope.row)">
+                    <div class="op-icon" v-if="scope.row.name !== '系统管理员'" @click="handleUpdate(scope.row)">
                         <el-tooltip content="修改" placement="bottom">
                             <el-icon>
                                 <Edit />
@@ -101,6 +101,18 @@
                 <el-form-item label="角色备注" prop="remark">
                     <el-input v-model="form.remark" placeholder="建议对角色权限做简单介绍"></el-input>
                 </el-form-item>
+                <el-form-item label="菜单权限" prop="menus">
+                    <el-checkbox-group v-model="form.perms">
+                        <el-checkbox v-for="p in perms" :key="p.id" v-show="p.isMenu === '0'" :label="p">
+                            {{ p.name }}</el-checkbox>
+                    </el-checkbox-group>
+                </el-form-item>
+                <el-form-item label="操作权限" prop="ops">
+                    <el-checkbox-group v-model="form.perms">
+                        <el-checkbox v-for="p in perms" :key="p.id" v-show="p.isMenu === '1'" :label="p.id" :checked="form.perms.includes(p)">
+                            {{ p.name }}</el-checkbox>
+                    </el-checkbox-group>
+                </el-form-item>
             </el-form>
         </FormDrawer>
 
@@ -111,22 +123,21 @@
             </el-descriptions>
             <el-descriptions :column="1" size="large">
                 <el-descriptions-item label="创建时间" align="left">{{ getTimestampConversion(info.createTime) }},{{
-                    info.createBy ?
-                    info.createBy : "系统原始" }}创建</el-descriptions-item>
+                    info.createBy ? info.createBy : "系统原始" }}创建</el-descriptions-item>
                 <el-descriptions-item label="最近更新" align="left">{{ getTimestampConversion(info.createTime) }},{{
-                    info.createBy ?
-                    info.createBy : "系统原始" }}更新</el-descriptions-item>
+                    info.createBy ? info.createBy : "系统原始" }}更新</el-descriptions-item>
             </el-descriptions>
             <el-descriptions :column="1" size="large">
-                <el-descriptions-item label="操作菜单">
+                <el-descriptions-item label="菜单权限">
                     <span v-show="info.perms" v-for="p in info.perms" :key="p.id">
-                        <el-tag v-show="p.isMenu === '0'" type="success" size="normal" effect="plain" round>{{ p.name
-                        }}</el-tag>
+                        <el-tag class="info-tag" v-show="p.isMenu === '0'" type="success" effect="plain" round>
+                            {{ p.name }}</el-tag>
                     </span>
                 </el-descriptions-item>
-                <el-descriptions-item label="权限功能">
+                <el-descriptions-item label="操作权限">
                     <span v-show="p.status === '0'" v-for="p in info.perms" :key="p.id">
-                        <el-tag v-show="p.isMenu === '1'" type="" size="normal" effect="plain" round>{{ p.name }}</el-tag>
+                        <el-tag class="info-tag" v-show="p.isMenu === '1'" type="" effect="plain" round>
+                            {{ p.name }}</el-tag>
                     </span>
                 </el-descriptions-item>
             </el-descriptions>
@@ -135,12 +146,14 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { queryList, changeStatus, moduleObjAdd, moduleObjUpdate } from "@/api/admin";
 import { error, getTimestampConversion } from "@/composables/util";
 import FormDrawer from "@/layouts/components/FormDrawer.vue";
 import InfoDrawer from "@/layouts/components/InfoDrawer.vue";
 import { tableDataInit, formDataInit, infoDataInit } from "@/composables/useCommon";
 
+const perms = ref([]);
 const module = "role";
 const path = "role/list";
 const {
@@ -156,7 +169,9 @@ const {
     funcPath: path,
     queryObj: {
         keyword: "",
-        status: ""
+        status: "",
+        cur: 1,
+        size: 10
     },
     getList: queryList,
     changeStatus: changeStatus,
@@ -167,6 +182,7 @@ const {
                 return o;
             });
             total.value = res.data.data.total;
+            perms.value = res.data.data.perms;
         } else {
             error(res.data.msg);
         }
@@ -219,10 +235,16 @@ const {
 const addRoleRules = {}
 const updateRoleRules = {}
 </script>
-
 <style lang="postcss" scoped>
-.epicon {
-    @apply ml-2 mr-2;
-    display: inline !important;
+:deep(.el-descriptions__title) {
+    font-size: 24px !important;
+}
+
+:deep(.el-descriptions__label) {
+    font-weight: bolder !important;
+}
+
+:deep(.el-checkbox) {
+    @apply mr-6 !important;
 }
 </style>

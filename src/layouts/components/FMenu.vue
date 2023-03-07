@@ -2,7 +2,7 @@
   <div class="f-menu">
     <el-menu :default-active="$route.path" class="border-0" @select="handleSelect">
       <template v-for="(item, index) in asideMenus" :key="index">
-        <el-sub-menu v-if="item.child && item.child.length > 0" :index="item.name">
+        <el-sub-menu v-if="item.children && item.children.length > 0" :index="item.name">
           <template #title>
             <el-icon>
               <component v-if="item.icon" :is="item.icon"></component>
@@ -10,7 +10,7 @@
             </el-icon>
             <span>{{ item.name }}</span>
           </template>
-          <el-menu-item v-for="(item2, index2) in item.child" :key="index2" :index="item2.path">
+          <el-menu-item v-for="(item2, index2) in item.children" :key="index2" :index="item2.path">
             <template #title>
               <el-icon>
                 <component v-if="item2.icon" :is="item2.icon"></component>

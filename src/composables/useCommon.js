@@ -35,9 +35,9 @@ export function tableDataInit(opt = {}) {
       .finally(() => (row.statusLoading = false));
   };
 
-  async function getData(cur) {
-    if (typeof cur == typeof 1) {
-      queryObj.value.cur = cur;
+  async function getData(cur = {type: Number, default: 1}) {
+    if (typeof cur == "number") {
+      queryObj.cur = cur;
     }
 
     loading.value = true;
@@ -49,6 +49,7 @@ export function tableDataInit(opt = {}) {
         } else {
           total.value = res.data.data.total;
           roles.value = res.data.data.roles;
+          perms.value = res.data.data.perms;
         }
       })
       .finally(() => (loading.value = false));

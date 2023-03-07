@@ -1,0 +1,9 @@
+/* 操作图表样式 */
+.op-icon {    
+    @apply ml-2 mr-2;
+    display: inline !important;
+}
+/* 信息tag样式 */
+.info-tag {
+    @apply mb-1 mr-1;
+}
