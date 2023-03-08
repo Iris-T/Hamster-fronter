@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ComponentInternalInstance, defineEmits, defineProps, getCurrentInstance } from 'vue'
+import { ComponentInternalInstance, getCurrentInstance } from 'vue'
 
 const { appContext: {app: { config: { globalProperties } } } } = getCurrentInstance() as ComponentInternalInstance
 

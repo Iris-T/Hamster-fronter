@@ -8,7 +8,7 @@
                         <el-input v-model="queryObj.keyword" placeholder="角色名称或关键字"></el-input>
                     </el-form-item>
                     <el-form-item label="启用状态">
-                        <el-radio-group v-model="queryObj.status">
+                        <el-radio-group v-model="queryObj.status" @change="getData()">
                             <el-radio label="0">启用</el-radio>
                             <el-radio label="1">未启用</el-radio>
                         </el-radio-group>
@@ -47,7 +47,7 @@
 
             <el-table-column label="关键字" align="center">
                 <template #default="{ row }">
-                    <span>{{ row.rkey }}</span>
+                    <span>{{ row.key }}</span>
                 </template>
             </el-table-column>
             <el-table-column label="备注说明" align="center">
@@ -95,8 +95,8 @@
                 <el-form-item label="角色名称" prop="name">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
-                <el-form-item label="关键字" prop="rkey">
-                    <el-input v-model="form.rkey"></el-input>
+                <el-form-item label="关键字" prop="key">
+                    <el-input v-model="form.key"></el-input>
                 </el-form-item>
                 <el-form-item label="角色备注" prop="remark">
                     <el-input v-model="form.remark" placeholder="建议对角色权限做简单介绍"></el-input>
@@ -118,7 +118,7 @@
 
         <InfoDrawer ref="infoDrawerRef" title="角色详细信息" destoryOnClose>
             <el-descriptions :title="info.name" :column="2" size="large">
-                <el-descriptions-item label="关键字" align="left">{{ info.rkey }}</el-descriptions-item>
+                <el-descriptions-item label="关键字" align="left">{{ info.key }}</el-descriptions-item>
                 <el-descriptions-item label="备注" align="left">{{ info.remark }}</el-descriptions-item>
             </el-descriptions>
             <el-descriptions :column="1" size="large">
@@ -201,7 +201,7 @@ const {
     module: module,
     form: {
         name: "",
-        rkey: "",
+        key: "",
         remark: "",
         perms: [{}],
         createBy: "",
@@ -221,7 +221,7 @@ const {
 } = infoDataInit({
     info: {
         name: "",
-        rkey: "",
+        key: "",
         remark: "",
         perms: [{}],
         createBy: "",

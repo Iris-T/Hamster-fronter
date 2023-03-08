@@ -78,7 +78,7 @@ const asyncRoutes = [
     name: "SysField",
     component: SysField,
     meta: {
-      title: "系统数据",
+      title: "系统参数",
     },
   }
 ];

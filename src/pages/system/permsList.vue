@@ -5,16 +5,16 @@
             <el-row :gutter="20">
                 <el-col :span="8">
                     <el-form-item label="关键词">
-                        <el-input v-model="queryObj.keyword" placeholder="角色名称或关键字"></el-input>
+                        <el-input v-model="queryObj.keyword" placeholder="权限名称或关键字"></el-input>
                     </el-form-item>
                     <el-form-item label="菜单/权限">
-                        <el-radio-group v-model="queryObj.isMenu">
+                        <el-radio-group v-model="queryObj.isMenu" @change="getData()">
                             <el-radio label="0">菜单</el-radio>
                             <el-radio label="1">权限</el-radio>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="启用状态">
-                        <el-radio-group v-model="queryObj.status">
+                        <el-radio-group v-model="queryObj.status" @change="getData()">
                             <el-radio label="0">启用</el-radio>
                             <el-radio label="1">未启用</el-radio>
                         </el-radio-group>
@@ -59,7 +59,7 @@
             </el-table-column>
             <el-table-column label="关键字" align="center">
                 <template #default="{ row }">
-                    <span>{{ row.pkey }}</span>
+                    <span>{{ row.key }}</span>
                 </template>
             </el-table-column>
             <el-table-column label="权限类型" align="center">
@@ -121,8 +121,8 @@
                 <el-form-item label="名称" prop="name">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
-                <el-form-item label="关键字" prop="pkey">
-                    <el-input v-model="form.pkey"></el-input>
+                <el-form-item label="关键字" prop="key">
+                    <el-input v-model="form.key"></el-input>
                 </el-form-item>
                 <el-form-item label="权限类型" prop="isMenu">
                     <el-radio-group v-model="form.isMenu">
@@ -158,7 +158,7 @@
                 </el-descriptions-item>
             </el-descriptions>
             <el-descriptions :column="2" size="large">
-                <el-descriptions-item label="关键字" align="left">{{ info.pkey }}</el-descriptions-item>
+                <el-descriptions-item label="关键字" align="left">{{ info.key }}</el-descriptions-item>
                 <el-descriptions-item label="备注" align="left">
                     <span v-if="info.remark">{{ info.remark }}</span>
                     <span v-else>无备注</span>
@@ -240,7 +240,7 @@ const {
     module: module,
     form: {
         name: "",
-        pkey: "",
+        key: "",
         parentId: null,
         isMenu: "0",
         icon: "",
@@ -264,7 +264,7 @@ const {
 } = infoDataInit({
     info: {
         name: "",
-        pkey: "",
+        key: "",
         parentId: null,
         isMenu: "",
         icon: "",

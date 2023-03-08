@@ -8,7 +8,7 @@
                         <el-input v-model="queryObj.keyword" placeholder="用户名或用户姓名"></el-input>
                     </el-form-item>
                     <el-form-item label="用户性别">
-                        <el-radio-group v-model="queryObj.gender">
+                        <el-radio-group v-model="queryObj.gender" @change="getData()">
                             <el-radio label="1">男</el-radio>
                             <el-radio label="0">女</el-radio>
                         </el-radio-group>
@@ -17,13 +17,13 @@
 
                 <el-col :span="8">
                     <el-form-item label="用户角色">
-                        <el-select v-model="queryObj.rid" placeholder="未选择">
+                        <el-select v-model="queryObj.rid" placeholder="未选择" @change="getData()">
                             <el-option v-for="role in roles" :key="role.id" :label="role.name" :value="role.id">
                             </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="用户状态">
-                        <el-radio-group v-model="queryObj.status">
+                        <el-radio-group v-model="queryObj.status" @change="getData()">
                             <el-radio label="0">启用</el-radio>
                             <el-radio label="1">未启用</el-radio>
                         </el-radio-group>
