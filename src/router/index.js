@@ -46,7 +46,7 @@ const asyncRoutes = [
     name: "CoList",
     component: CoList,
     meta: {
-      title: "合作伙伴管理",
+      title: "月结客户",
     },
   },
   {

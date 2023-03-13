@@ -46,9 +46,9 @@ const navs = [
     {
         icon: "Van",
         title: "车辆数据",
-        path: "/vehicel/list",
+        path: "/vehicle/list",
         color: "text-green-500",
-        perms:['admin', 'vehicel:manage']
+        perms:['admin', 'vehicle:manage']
     },
     {
         icon: "Box",
