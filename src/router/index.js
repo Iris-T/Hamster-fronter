@@ -9,6 +9,7 @@ import RoleList from "@/pages/system/roleList.vue";
 import PermsList from "@/pages/system/permsList.vue";
 import SysField from "@/pages/system/SysField.vue"; 
 import Admin from "@/layouts/admin.vue";
+import VehicleList from "@/pages/vehicle/list.vue";
 
 // 默认路由,所有用户共享
 const routes = [
@@ -41,6 +42,14 @@ const routes = [
 
 // 动态路由,用于匹配菜单,动态添加路由
 const asyncRoutes = [
+  {
+    path: "/vehicle/list",
+    name: "VehicleList",
+    component: VehicleList,
+    meta: {
+      title: "登记车辆",
+    }
+  },
   {
     path: "/co/list",
     name: "CoList",
