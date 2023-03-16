@@ -15,7 +15,7 @@
   </el-card>
 </template>
 <script setup>
-import { error } from "@/composables/util";
+import { customNotification } from "@/composables/util";
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useResizeObserver } from "@vueuse/core";
 import { chartInfo } from "@/api/index";
@@ -109,7 +109,7 @@ function getChartInfo() {
         ];
         myChart.setOption(option);
       } else {
-        error(res.data.msg);
+        customNotification("error", res.data.msg);
       }
     })
     .finally(() => {

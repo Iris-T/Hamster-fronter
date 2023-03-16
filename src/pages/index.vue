@@ -68,7 +68,7 @@ import IndexCard from "@/layouts/components/IndexCard.vue";
 
 import { ref } from "vue";
 import { getInfo, facility } from "@/api/index";
-import { error } from "@/composables/util";
+import { customNotification } from "@/composables/util";
 
 const staticInfo = ref({});
 const car = ref([]);
@@ -79,7 +79,7 @@ getInfo()
     if (res.data.code === 200) {
       staticInfo.value = res.data.data;
     } else {
-      error(res.data.msg);
+      customNotification("error", res.data.msg);
     }
   });
 
@@ -89,7 +89,7 @@ facility()
       car.value = res.data.data.car;
       wh.value = res.data.data.wh;
     } else {
-      error(res.data.msg);
+      customNotification("error", res.data.msg);
     }
   });
 </script>

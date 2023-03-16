@@ -146,13 +146,12 @@
 
 <script setup>
 import { queryList, changeStatus, moduleObjAdd, moduleObjUpdate } from "@/api/admin";
-import { error, getTimestampConversion } from "@/composables/util";
+import { customNotification, getTimestampConversion } from "@/composables/util";
 import FormDrawer from "@/layouts/components/FormDrawer.vue";
 import InfoDrawer from "@/layouts/components/InfoDrawer.vue";
 import { tableDataInit, formDataInit, infoDataInit } from "@/composables/useCommon";
 
 const module = "sys/field";
-const path = "sys/field/list";
 const {
     queryObj,
     tableData,
@@ -163,7 +162,6 @@ const {
     handleStatusChange
 } = tableDataInit({
     module: module,
-    funcPath: path,
     queryObj: {
         keyword: "",
         status: "",
@@ -180,7 +178,7 @@ const {
             });
             total.value = res.data.data.total;
         } else {
-            error(res.data.msg);
+            customNotification("error", res.data.msg);
         }
     }
 });

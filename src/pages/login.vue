@@ -44,7 +44,7 @@
 <script setup>
 import { ref, reactive, onMounted, onBeforeUnmount } from "vue";
 import logo from "@/assets/logo.png";
-import { success, error } from "@/composables/util";
+import { customNotification } from "@/composables/util";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
@@ -89,14 +89,14 @@ const onSubmit = () => {
         if (res.code === 200) {
           // 跳转到主页
           router.push("/");
-          success(res.msg);
+          customNotification("success", res.msg);
         } else {
-          error(res.msg);
+          customNotification("error", res.msg);
         }
       })
       .catch((err) => {
         // 提示信息
-        error(res.data.msg);
+        customNotification("error", res.data.msg);
       })
       .finally(() => {
         // 加载动画结束

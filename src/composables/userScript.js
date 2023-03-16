@@ -1,6 +1,6 @@
 import { ref, reactive } from "vue";
 import { logout, reProfile, rePwd, userinfo } from "@/api/user";
-import { showModel, success, error } from "@/composables/util";
+import { showModel, customNotification } from "@/composables/util";
 import { router } from "@/router";
 import { useStore } from "vuex";
 
@@ -48,12 +48,12 @@ export function useRePwd() {
       rePwd(rePwdObj)
         .then((res) => {
           if (res.data.code === 200) {
-            success("更新密码成功,请重新登录");
+            customNotification("success", "更新密码成功,请重新登录");
             // 删除登录凭证
             store.dispatch("logout");
             router.push("/login");
           } else {
-            error(res.data.msg);
+            customNotification("error", res.data.msg);
           }
         })
         .finally(() => {
@@ -127,9 +127,9 @@ export function useReProfile() {
         .then((res) => {
           if (res.data.code === 200) {
             userinfo();
-            success(res.data.msg);
+            customNotification("success", res.data.msg);
           } else {
-            error(res.data.msg);
+            customNotification("error", res.data.msg);
           }
         })
         .finally(() => {
@@ -160,7 +160,7 @@ export function useLogout() {
         router.replace({path: "/login"});
         location.reload();
         store.dispatch("logout");
-        success("注销成功");
+        customNotification("success", "注销成功");
       });
     });
   }

@@ -1,5 +1,5 @@
 import { router, addRoutes } from "@/router";
-import { warning, showFullLoading, hideFullLoading } from "@/composables/util";
+import { customNotification, showFullLoading, hideFullLoading } from "@/composables/util";
 import store from "@/store";
 
 let flag = false;
@@ -10,7 +10,7 @@ router.beforeEach(async (to, from, next) => {
 
   const authorization = localStorage.getItem("authorization");
   if (!authorization && to.path != "/login") {
-    warning("请登录后访问");
+    customNotification("warning", "请登录后访问");
     next({ path: "/login" });
   }
   if (authorization && to.path == "/login") {

@@ -1,6 +1,5 @@
 import axios from "axios";
-import { error, warning } from "./composables/util";
-import { useRouter } from "vue-router";
+import { customNotification } from "@/composables/util";
 import store from "@/store/index.js";
 
 const service = axios.create({
@@ -22,7 +21,7 @@ service.interceptors.request.use(
   },
   function (err) {
     // 对请求错误做些什么
-    error("请求失败");
+    customNotification("error", "请求失败");
     return Promise.reject(err);
   }
 );
@@ -43,9 +42,9 @@ service.interceptors.response.use(
       store.dispatch("logout").finally(() => {
         location.reload();
       });
-      warning("无认证访问");
+      customNotification("warning", "无认证访问");
     } else {
-      error(err.response.data.msg || "服务器错误");
+      customNotification("warning", err.response.data.msg || "服务器错误");
     }
     return Promise.reject(err);
   }

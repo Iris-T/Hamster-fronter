@@ -190,21 +190,13 @@
 <script setup>
 import { queryList, changeStatus, moduleObjAdd, moduleObjUpdate, resetUserPwd } from "@/api/admin";
 import { checkIdNo, checkUsername } from "@/api/common";
-import { success, showModel } from "@/composables/util";
+import { customNotification, showModel, extractColorByName, isPhoneNo, isChinaIdNo, getTimestampConversion } from "@/composables/util";
 import { ref } from "vue";
-import {
-    error,
-    extractColorByName,
-    isPhoneNo,
-    isChinaIdNo,
-    getTimestampConversion
-} from "@/composables/util";
 import FormDrawer from "@/layouts/components/FormDrawer.vue";
 import InfoDrawer from "@/layouts/components/InfoDrawer.vue";
 import { tableDataInit, formDataInit, infoDataInit } from "@/composables/useCommon";
 
 const module = "user";
-const path = "user/list";
 const rules = {
     phone: [
         { required: true, message: "联系方式不能为空", trigger: "blur" },
@@ -252,7 +244,6 @@ const {
     handleStatusChange
 } = tableDataInit({
     module: module,
-    funcPath: path,
     queryObj: {
         keyword: "",
         gender: "",
@@ -272,7 +263,7 @@ const {
             total.value = res.data.data.total;
             roles.value = res.data.data.roles;
         } else {
-            error(res.data.msg);
+            customNotification("error", res.data.msg);
         }
     }
 });
@@ -333,7 +324,7 @@ const {
 
 const handleResetUserPwd = (id) => {
     showModel("是否确认重置用户密码?").then((res) => {
-        resetUserPwd(id).then((res) => success(res.data.msg));
+        resetUserPwd(id).then((res) => customNotification("success", res.data.msg));
     })
 }
 </script>

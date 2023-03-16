@@ -1,5 +1,9 @@
 import { ref, reactive, computed } from "vue";
-import { success, warning } from "@/composables/util";
+import {
+  customNotification,
+  showFullLoading,
+  hideFullLoading,
+} from "@/composables/util";
 
 // Table数据获取，分页，刷新，更新状态
 export function tableDataInit(opt = {}) {
@@ -19,6 +23,62 @@ export function tableDataInit(opt = {}) {
   const loading = ref(false);
   const total = ref(0);
 
+  // excel模板导出
+  const exportExcelTemp = () => {
+    showFullLoading();
+    opt
+      .exportTemplate(opt.module)
+      .then((res) => {
+        downloadExcel(res);
+      })
+      .finally(hideFullLoading());
+  };
+  // 符合条件的数据导出
+  const exportExcelData = () => {
+    showFullLoading();
+    opt
+      .exportData(opt.module, queryObj)
+      .then((res) => {
+        downloadExcel(res);
+      })
+      .finally(hideFullLoading());
+  };
+  // 使用模板导入数据
+  const importExcelData = (file) => {
+    showFullLoading();
+    opt
+      .importData(opt.module, file)
+      .then((res) => {
+        if (res.data.code === 200) {
+          customNotification("success", res.data.data.info);
+          res.data.data.errMsg.forEach((e) =>
+            customNotification("warning", e, 0, true)
+          );
+        } else {
+          customNotification("warning", res.data.msg);
+        }
+      })
+      .finally(hideFullLoading());
+    return false;
+  };
+
+  const downloadExcel = (res) => {
+    const link = document.createElement("a");
+    let blob = new Blob([res.data], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const fileNameEncode =
+      res.headers["content-disposition"].split(`utf-8''`)[1];
+    // 解码
+    const fileName = decodeURIComponent(fileNameEncode);
+    link.style.display = "none";
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute("download", fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   // 更新状态
   const handleStatusChange = (row, status) => {
     row.statusLoading = true;
@@ -26,23 +86,23 @@ export function tableDataInit(opt = {}) {
       .changeStatus(opt.module, row.id, status)
       .then((res) => {
         if (res.data.code === 200) {
-          success(res.data.msg);
+          customNotification("success", res.data.msg);
           getData(queryObj);
         } else {
-          warning(res.data.msg);
+          customNotification("warning", res.data.msg);
         }
       })
       .finally(() => (row.statusLoading = false));
   };
 
-  async function getData(cur = {type: Number, default: 1}) {
+  async function getData(cur = { type: Number, default: 1 }) {
     if (typeof cur == "number") {
       queryObj.cur = cur;
     }
 
     loading.value = true;
     opt
-      .getList(opt.funcPath, queryObj)
+      .getList(opt.module, queryObj)
       .then((res) => {
         if (opt.onGetListSuccess && typeof opt.onGetListSuccess == "function") {
           opt.onGetListSuccess(res);
@@ -64,6 +124,9 @@ export function tableDataInit(opt = {}) {
     resetQueryObj,
     getData,
     handleStatusChange,
+    exportExcelTemp,
+    exportExcelData,
+    importExcelData,
   };
 }
 // 新增、修改对象信息
@@ -112,13 +175,13 @@ export function formDataInit(opt = {}) {
       func
         .then((res) => {
           if (res.data.code == 200) {
-            success(res.data.msg);
+            customNotification("success", res.data.msg);
             // 刷新数据
             opt.getData();
             // 成功则关闭Drawer组件
             formDrawerRef.value.close();
           } else {
-            warning(res.data.msg);
+            customNotification("warning", res.data.msg);
           }
         })
         .finally(() => {

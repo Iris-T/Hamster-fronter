@@ -15,6 +15,7 @@
     "default-passive-events": "^2.0.0",
     "echarts": "^5.4.1",
     "element-plus": "^2.2.28",
+    "elui-china-area-dht": "^2.0.0",
     "gsap": "^3.11.4",
     "nprogress": "^0.2.0",
     "vue": "^3.2.45",

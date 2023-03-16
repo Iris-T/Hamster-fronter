@@ -58,11 +58,11 @@ const navs = [
         perms:['admin', 'cargo:manage']
     },
     {
-        icon: "Location",
-        title: "运输数据",
-        path: "/trans/list",
+        icon: "House",
+        title: "仓库数据",
+        path: "/wh/list",
         color: "text-green-500",
-        perms: ['admin', 'trans:manage']
+        perms: ['admin', 'wh:manage']
     },
     {
         icon: "Money",

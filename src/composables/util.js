@@ -1,36 +1,16 @@
 import { ElNotification, ElMessageBox } from "element-plus";
 import nprogress from "nprogress";
 
-export function success(msg) {
-  return ElNotification({
-    message: msg,
-    type: "success",
-    duration: 2500,
-  });
-}
-
-export function error(msg) {
-  return ElNotification({
-    message: msg,
-    type: "error",
-    duration: 2500,
-  });
-}
-
-export function warning(msg) {
-  return ElNotification({
-    message: msg,
-    type: "warning",
-    duration: 2500,
-  });
-}
-
-export function info(msg) {
-  return ElNotification({
-    message: msg,
-    type: "info",
-    duration: 2500,
-  });
+// 通知提示
+export function customNotification(type = "info", msg, timeout=2500, hide=false) {
+  return window.setTimeout(() => {
+    ElNotification({
+      message: msg,
+      type: type,
+      duration: timeout,
+      showClose: hide,
+    });
+  }, 0);
 }
 
 export function showModel(content = "提示内容", type = "warning", title = "") {
@@ -104,10 +84,18 @@ export function getTimestampConversion(timestamp) {
   }
   let date = new Date(timeStamp); // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
   let Y = date.getFullYear() + "-";
-  let M = (date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1) + "-";
-  let D = date.getDate() < 10 ? "0" + date.getDate() + " " : date.getDate() + " ";
-  let h = date.getHours() < 10 ? "0" + date.getHours() + ":" : date.getHours() + ":";
-  let m = date.getMinutes() < 10 ? "0" + date.getMinutes() + ":" : date.getMinutes() + ":";
+  let M =
+    (date.getMonth() + 1 < 10
+      ? "0" + (date.getMonth() + 1)
+      : date.getMonth() + 1) + "-";
+  let D =
+    date.getDate() < 10 ? "0" + date.getDate() + " " : date.getDate() + " ";
+  let h =
+    date.getHours() < 10 ? "0" + date.getHours() + ":" : date.getHours() + ":";
+  let m =
+    date.getMinutes() < 10
+      ? "0" + date.getMinutes() + ":"
+      : date.getMinutes() + ":";
   let s = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
   return Y + M + D + h + m + s;
 }
