@@ -10,7 +10,6 @@ import "@/style.css";
 import "@/permission";
 import "default-passive-events";
 import permission from "@/directives/permission";
-import { EluiChinaAreaDht } from 'elui-china-area-dht'
 
 const app = createApp(App);
 app.use(permission);

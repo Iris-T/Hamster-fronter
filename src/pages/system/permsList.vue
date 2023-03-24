@@ -91,9 +91,9 @@
             </el-table-column>
             <el-table-column label="操作" align="center" width="160">
                 <template #default="scope">
-                    <div class="op-icon">
+                    <div class="op-icon" @click="openInfoDrawer(scope.row)">
                         <el-tooltip content="查看" placement="bottom">
-                            <el-icon @click="openInfoDrawer(scope.row)">
+                            <el-icon>
                                 <View />
                             </el-icon>
                         </el-tooltip>

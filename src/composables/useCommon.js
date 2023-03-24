@@ -110,6 +110,8 @@ export function tableDataInit(opt = {}) {
           total.value = res.data.data.total;
           roles.value = res.data.data.roles;
           perms.value = res.data.data.perms;
+          cargoStatus.value = res.data.data.cargoStatus;
+          cargoTypes.value = res.data.data.cargoTypes;
         }
       })
       .finally(() => (loading.value = false));

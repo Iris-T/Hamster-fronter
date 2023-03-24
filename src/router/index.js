@@ -11,6 +11,7 @@ import SysField from "@/pages/system/SysField.vue";
 import Admin from "@/layouts/admin.vue";
 import VehicleList from "@/pages/vehicle/list.vue";
 import WhList from "@/pages/wh/list.vue";
+import CargoList from "@/pages/cargo/list.vue";
 
 // 默认路由,所有用户共享
 const routes = [
@@ -43,6 +44,14 @@ const routes = [
 
 // 动态路由,用于匹配菜单,动态添加路由
 const asyncRoutes = [
+  {
+    path: "/cargo/list",
+    name: "CargoList",
+    component: CargoList,
+    meta: {
+      title: "登记货物",
+    }
+  },
   {
     path: "/wh/list",
     name: "WhList",
