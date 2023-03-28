@@ -8,6 +8,7 @@ import UserList from "@/pages/system/userList.vue";
 import RoleList from "@/pages/system/roleList.vue";
 import PermsList from "@/pages/system/permsList.vue";
 import SysField from "@/pages/system/SysField.vue"; 
+import CargoType from "@/pages/system/CargoType.vue";
 import Admin from "@/layouts/admin.vue";
 import VehicleList from "@/pages/vehicle/list.vue";
 import WhList from "@/pages/wh/list.vue";
@@ -107,6 +108,14 @@ const asyncRoutes = [
     meta: {
       title: "系统参数",
     },
+  },
+  {
+    path: "/sys/cargo/type",
+    name: "CargoType",
+    component: CargoType,
+    meta: {
+      title: "货物类别",
+    }
   }
 ];
 

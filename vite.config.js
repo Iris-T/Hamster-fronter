@@ -16,11 +16,11 @@ export default defineConfig({
     }
   },
   server: {
+    host: '0.0.0.0',
     port: 8899,
     // open: true,
     // 允许跨域
     cors: true,
-    host: 'hamster',
     proxy: {
       '/api': {
         target: 'http://hamster-backend:8888',
