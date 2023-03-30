@@ -1,4 +1,4 @@
-import axios from "../axios";
+import axios from "@/axios";
 
 export function login(username, password) {
   var data = new FormData();
