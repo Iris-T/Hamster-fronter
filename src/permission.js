@@ -14,7 +14,7 @@ router.beforeEach(async (to, from, next) => {
     next({ path: "/login" });
   }
   if (authorization && to.path == "/login") {
-    warning("已登录,无需重复操作");
+    customNotification("warning", "已登录,无需重复操作");
     next({ path: from.path ? from.path : "/" });
   }
 
