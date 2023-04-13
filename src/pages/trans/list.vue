@@ -5,7 +5,18 @@
             <el-row :gutter="20">
                 <el-col :span="8">
                     <el-form-item label="关键词">
-                        <el-input v-model="queryObj.keyword" placeholder="客户名称"></el-input>
+                        <el-input v-model="queryObj.keyword" placeholder="查询起始或结束仓库"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="运输状态">
+                        <el-radio-group v-model="queryObj.status" @change="getData()">
+                            <el-radio label="0">未确认</el-radio>
+                            <el-radio label="1">未开始</el-radio>
+                            <el-radio label="2">运输中</el-radio>
+                            <el-radio label="3">已结束</el-radio>
+                            <el-radio label="-1">未知</el-radio>
+                        </el-radio-group>
                     </el-form-item>
                 </el-col>
 
@@ -21,7 +32,7 @@
 
         <!-- 新增 | 刷新 -->
         <div class="flex items-center justify-between mb-4">
-            <el-button type="primary" @click="handleCreate()">新增月结客户</el-button>
+            <el-button type="primary" @click="handleCreate()">新增运输单</el-button>
             <el-tooltip content="刷新数据" placement="top" effect="dark">
                 <el-button text @click="getData()">
                     <el-icon :size="30">
@@ -33,41 +44,45 @@
 
         <el-table :data="tableData" style="width: 100%" v-loading="loading" size="small">
 
-            <el-table-column label="客户名称" align="center">
+            <el-table-column label="运输编号" align="center">
                 <template #default="{ row }">
-                    <span>{{ row.name }}</span>
+                    <span>{{ row.id }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="联系人" align="center">
+
+            <el-table-column label="运输司机" align="center">
                 <template #default="{ row }">
-                    <span>{{ row.contractName }}</span>
+                    <span>{{ row.driver }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="联系方式" align="center">
+            <el-table-column label="作业车辆" align="center">
                 <template #default="{ row }">
-                    <span>{{ row.phone }}</span>
+                    <span>{{ row.vehicle }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="联系地址" align="center">
+            <el-table-column label="运输状态" align="center">
                 <template #default="{ row }">
-                    <span>{{ row.address }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column label="信用代码" align="center">
-                <template #default="{ row }">
-                    <span>{{ row.usci }}</span>
+                    <el-radio-group v-model="row.status" @change="handleStatusChange(row, $event)"
+                        :disabled="row.status == '2' || row.status == '3'">
+                        <el-radio-button label="0">未确认</el-radio-button>
+                        <el-radio-button label="1">未开始</el-radio-button>
+                        <el-radio-button label="2">运输中</el-radio-button>
+                        <el-radio-button label="3">已结束</el-radio-button>
+                        <el-radio-button label="-1">未知</el-radio-button>
+                    </el-radio-group>
                 </template>
             </el-table-column>
             <el-table-column label="操作" align="center" width="160">
                 <template #default="scope">
-                    <div class="op-icon"  @click="openInfoDrawer(scope.row)">
+                    <div class="op-icon" @click="openInfoDrawer(scope.row)">
                         <el-tooltip content="查看" placement="bottom">
                             <el-icon>
                                 <View />
                             </el-icon>
                         </el-tooltip>
                     </div>
-                    <div class="op-icon" @click="handleUpdate(scope.row)">
+                    <div class="op-icon" v-if="scope.row.status == '2' || scopr.row.status == '3'"
+                        @click="handleUpdate(scope.row)">
                         <el-tooltip content="修改" placement="bottom">
                             <el-icon>
                                 <Edit />
@@ -80,37 +95,42 @@
 
         <div class="flex items-center justify-center mt-5">
             <el-pagination background layout="prev, pager, next" :total="total" :current-page="queryObj.cur"
-                :page-size="queryObj.size" @current-change="getData" />
+                :page-size="queryObj.size" @current-change="getData()" />
             <small class="ml-6 text-gray-500">共{{ total }}条数据</small>
         </div>
 
         <FormDrawer ref="formDrawerRef" :title="drawerTitle" destoryOnClose @submit="handleSubmit()">
-            <el-form :model="form" ref="formRef" :rules="optId === 0 ? addRoleRules : updateRoleRules"
+            <el-form :model="form" ref="formRef" :rules="optId == 0 ? addRoleRules : updateRoleRules"
                 :validate-on-rule-change="false" label-width="80px">
-                <el-form-item label="客户名称" prop="name">
-                    <el-input v-model="form.name" />
+                <el-form-item label="角色名称" prop="name">
+                    <el-input v-model="form.name"></el-input>
                 </el-form-item>
-                <el-form-item label="联系人" prop="contractName">
-                    <el-input v-model="form.contractName" />
+                <el-form-item label="关键字" prop="key">
+                    <el-input v-model="form.key"></el-input>
                 </el-form-item>
-                <el-form-item label="联系方式" prop="phone">
-                    <el-input v-model="form.phone" />
+                <el-form-item label="角色备注" prop="remark">
+                    <el-input v-model="form.remark" placeholder="建议对角色权限做简单介绍"></el-input>
                 </el-form-item>
-                <el-form-item label="联系地址" prop="address">
-                    <el-input v-model="form.address" />
+                <el-form-item label="菜单权限" prop="menus">
+                    <el-checkbox-group v-model="form.perms">
+                        <el-checkbox v-for="p in perms" :key="p.id" v-show="p.isMenu === '0'" :label="p">
+                            {{ p.name }}</el-checkbox>
+                    </el-checkbox-group>
                 </el-form-item>
-                <el-form-item label="信用代码" prop="usci">
-                    <el-input v-model="form.usci" />
+                <el-form-item label="操作权限" prop="ops">
+                    <el-checkbox-group v-model="form.perms">
+                        <el-checkbox v-for="p in perms" :key="p.id" v-show="p.isMenu === '1'" :label="p.id"
+                            :checked="form.perms.includes(p)">
+                            {{ p.name }}</el-checkbox>
+                    </el-checkbox-group>
                 </el-form-item>
             </el-form>
         </FormDrawer>
 
-        <InfoDrawer ref="infoDrawerRef" title="详细信息" destoryOnClose>
-            <el-descriptions :title="info.name" :column="1" size="large">
-                <el-descriptions-item label="联系人" align="left">{{ info.contractName }}</el-descriptions-item>
-                <el-descriptions-item label="联系方式" align="left">{{ info.phone }}</el-descriptions-item>
-                <el-descriptions-item label="联系地址" align="left">{{ info.address }}</el-descriptions-item>
-                <el-descriptions-item label="信用代码" align="left">{{ info.usci }}</el-descriptions-item>
+        <InfoDrawer ref="infoDrawerRef" title="角色详细信息" destoryOnClose>
+            <el-descriptions :title="info.name" :column="2" size="large">
+                <el-descriptions-item label="关键字" align="left">{{ info.key }}</el-descriptions-item>
+                <el-descriptions-item label="备注" align="left">{{ info.remark }}</el-descriptions-item>
             </el-descriptions>
             <el-descriptions :column="1" size="large">
                 <el-descriptions-item label="创建时间" align="left">{{ getTimestampConversion(info.createTime) }},{{
@@ -118,18 +138,36 @@
                 <el-descriptions-item label="最近更新" align="left">{{ getTimestampConversion(info.createTime) }},{{
                     info.createBy ? info.createBy : "系统原始" }}更新</el-descriptions-item>
             </el-descriptions>
+            <el-descriptions :column="1" size="large">
+                <el-descriptions-item label="菜单权限">
+                    <span v-show="info.perms" v-for="p in info.perms" :key="p.id">
+                        <el-tag class="info-tag" v-show="p.isMenu === '0'" type="success" effect="plain" round>
+                            {{ p.name }}</el-tag>
+                    </span>
+                </el-descriptions-item>
+                <el-descriptions-item label="操作权限">
+                    <span v-show="p.status === '0'" v-for="p in info.perms" :key="p.id">
+                        <el-tag class="info-tag" v-show="p.isMenu === '1'" type="" effect="plain" round>
+                            {{ p.name }}</el-tag>
+                    </span>
+                </el-descriptions-item>
+            </el-descriptions>
         </InfoDrawer>
     </el-card>
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { queryList, changeStatus, moduleObjAdd, moduleObjUpdate } from "@/api/admin";
 import { customNotification, getTimestampConversion } from "@/composables/util";
 import FormDrawer from "@/layouts/components/FormDrawer.vue";
 import InfoDrawer from "@/layouts/components/InfoDrawer.vue";
 import { tableDataInit, formDataInit, infoDataInit } from "@/composables/useCommon";
 
-const module = "co";
+const drivers = ref([]);
+const vehicles = ref([]);
+const whs = ref([]);
+const module = "trans";
 const {
     queryObj,
     tableData,
@@ -142,6 +180,7 @@ const {
     module: module,
     queryObj: {
         keyword: "",
+        status: "",
         cur: 1,
         size: 10
     },
@@ -149,7 +188,7 @@ const {
     changeStatus: changeStatus,
     onGetListSuccess: res => {
         if (res.data.code == 200) {
-            tableData.value = res.data.data.cos.map((o) => {
+            tableData.value = res.data.data.trans.map((o) => {
                 o.statusLoading = false;
                 return o;
             });
@@ -171,15 +210,17 @@ const {
 } = formDataInit({
     module: module,
     form: {
-        name: "",
-        phone: "",
-        address: "",
-        usci: "",
-        createBy: "",
-        createTime: 0,
-        updateBy: "",
-        updateTime: 0,
-        contractName: ""
+        id: 0,
+        driver: "",
+        vehicle: "",
+        startWh: "",
+        endWh: "",
+        startKeeper: "",
+        startTime: 0,
+        endKeeper: "",
+        endTime: 0,
+        status: "0",
+        remark: ""
     },
     getData,
     create: moduleObjAdd,
@@ -191,15 +232,17 @@ const {
     openInfoDrawer
 } = infoDataInit({
     info: {
-        name: "",
-        phone: "",
-        address: "",
-        usci: "",
-        createBy: "",
-        createTime: 0,
-        updateBy: "",
-        updateTime: 0,
-        contractName: ""
+        id: 0,
+        driver: "",
+        vehicle: "",
+        startWh: "",
+        endWh: "",
+        startKeeper: "",
+        startTime: 0,
+        endKeeper: "",
+        endTime: 0,
+        status: "0",
+        remark: ""
     }
 })
 
@@ -217,5 +260,4 @@ const updateRoleRules = {}
 
 :deep(.el-checkbox) {
     @apply mr-6 !important;
-}
-</style>
+}</style>

@@ -44,11 +44,11 @@ const navs = [
         perms: ['admin', 'co:manage']
     },
     {
-        icon: "Van",
-        title: "车辆数据",
-        path: "/vehicle/list",
+        icon: "MapLocation",
+        title: "运输数据",
+        path: "/trans/list",
         color: "text-green-500",
-        perms:['admin', 'vehicle:manage']
+        perms: ['admin', 'trans:manage']
     },
     {
         icon: "Box",

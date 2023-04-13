@@ -65,14 +65,14 @@
             </el-table-column>
             <el-table-column label="操作" align="center" width="160">
                 <template #default="scope">
-                    <div class="op-icon">
-                        <el-tooltip content="查看" placement="bottom" @click="openInfoDrawer(scope.row)">
+                    <div class="op-icon" @click="openInfoDrawer(scope.row)">
+                        <el-tooltip content="查看" placement="bottom">
                             <el-icon>
                                 <View />
                             </el-icon>
                         </el-tooltip>
                     </div>
-                    <div class="op-icon" v-if="scope.row.name !== '系统管理员'" @click="handleUpdate(scope.row)">
+                    <div class="op-icon" @click="handleUpdate(scope.row)">
                         <el-tooltip content="修改" placement="bottom">
                             <el-icon>
                                 <Edit />

@@ -13,6 +13,7 @@ import Admin from "@/layouts/admin.vue";
 import VehicleList from "@/pages/vehicle/list.vue";
 import WhList from "@/pages/wh/list.vue";
 import CargoList from "@/pages/cargo/list.vue";
+import TransList from "@/pages/trans/list.vue";
 
 // 默认路由,所有用户共享
 const routes = [
@@ -115,6 +116,14 @@ const asyncRoutes = [
     component: CargoType,
     meta: {
       title: "货物类别",
+    }
+  },
+  {
+    path: "/trans/list",
+    name: "TransList",
+    component: TransList,
+    meta: {
+      title: "运输管理",  
     }
   }
 ];

@@ -80,8 +80,8 @@
             </el-table-column>
             <el-table-column label="操作" align="center" width="160">
                 <template #default="scope">
-                    <div class="op-icon">
-                        <el-tooltip content="查看" placement="bottom" @click="openInfoDrawer(scope.row)">
+                    <div class="op-icon" @click="openInfoDrawer(scope.row)">
+                        <el-tooltip content="查看" placement="bottom">
                             <el-icon>
                                 <View />
                             </el-icon>
