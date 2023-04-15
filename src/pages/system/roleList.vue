@@ -103,13 +103,14 @@
                 </el-form-item>
                 <el-form-item label="菜单权限" prop="menus">
                     <el-checkbox-group v-model="form.perms">
-                        <el-checkbox v-for="p in perms" :key="p.id" v-show="p.isMenu === '0'" :label="p">
+                        <el-checkbox v-for="p in perms" :key="p" v-show="p.isMenu === '0'" :label="p">
                             {{ p.name }}</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item label="操作权限" prop="ops">
                     <el-checkbox-group v-model="form.perms">
-                        <el-checkbox v-for="p in perms" :key="p.id" v-show="p.isMenu === '1'" :label="p.id" :checked="form.perms.includes(p)">
+                        <el-checkbox v-for="p in perms" :key="p" v-show="p.isMenu === '1'" :label="p"
+                            :checked="form.perms.includes(p)">
                             {{ p.name }}</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>

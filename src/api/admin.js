@@ -44,11 +44,11 @@ export function moduleObjUpdate(module, id, obj) {
 
 // 导出数据模板
 export function exportTemplate(module) {
-  return axios.get(`/${module}/export/template`, {responseType: "blob"});
+  return axios.get(`/${module}/export/template`, { responseType: "blob" });
 }
 
 // 导出数据记录
-export function exportData(module, queryObj={keyword: ""}) {
+export function exportData(module, queryObj = { keyword: "" }) {
   let q = [];
   for (const key in queryObj) {
     if (queryObj[key]) {
@@ -57,7 +57,7 @@ export function exportData(module, queryObj={keyword: ""}) {
   }
   let query = q.join("&");
   query = query ? "?" + query : "";
-  return axios.get(`${module}/export/data${query}`, {responseType: "blob"})
+  return axios.get(`${module}/export/data${query}`, { responseType: "blob" });
 }
 
 // 导入数据
@@ -66,5 +66,5 @@ export function importData(module, file) {
   data.append("file", file);
   return axios.post(`${module}/import`, data, {
     headers: { "Content-Type": "multipart/form-data" },
-  })
+  });
 }
