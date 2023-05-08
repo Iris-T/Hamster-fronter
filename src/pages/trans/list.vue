@@ -60,7 +60,7 @@
                     <span>{{ row.vehicle }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="运输状态" align="center">
+            <el-table-column label="运输状态" align="center" width="500">
                 <template #default="{ row }">
                     <el-radio-group v-model="row.status" @change="handleStatusChange(row, $event)"
                         :disabled="row.status == '2' || row.status == '3'">
@@ -81,7 +81,7 @@
                             </el-icon>
                         </el-tooltip>
                     </div>
-                    <div class="op-icon" v-if="scope.row.status == '2' || scopr.row.status == '3'"
+                    <div class="op-icon" v-if="scope.row.status == '2' || scope.row.status == '3'"
                         @click="handleUpdate(scope.row)">
                         <el-tooltip content="修改" placement="bottom">
                             <el-icon>
@@ -102,27 +102,28 @@
         <FormDrawer ref="formDrawerRef" :title="drawerTitle" destoryOnClose @submit="handleSubmit()">
             <el-form :model="form" ref="formRef" :rules="optId == 0 ? addRoleRules : updateRoleRules"
                 :validate-on-rule-change="false" label-width="80px">
-                <el-form-item label="角色名称" prop="name">
-                    <el-input v-model="form.name"></el-input>
+                <el-form-item label="发出地" prop="startWhId">
+                    <el-select v-model="form.startWhId" placeholder="请选择运输发出地">
+                        <el-option v-for="w in whs" :key="w.id" :label="w.name" :value="w.id"></el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="关键字" prop="key">
-                    <el-input v-model="form.key"></el-input>
+                <el-form-item label="目的地" prop="endWhId">
+                    <el-select v-model="form.endWhId" placeholder="请选择运输目的地">
+                        <el-option v-for="w in whs" :key="w.id" :label="w.name" :value="w.id"></el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="角色备注" prop="remark">
-                    <el-input v-model="form.remark" placeholder="建议对角色权限做简单介绍"></el-input>
+                <el-form-item label="作业人员" prop="driverId">
+                    <el-select v-model="form.driverId" placeholder="请选择作业人员">
+                        <el-option v-for="d in drivers" :key="d.id" :label="d.name" :value="d.id"></el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="菜单权限" prop="menus">
-                    <el-checkbox-group v-model="form.perms">
-                        <el-checkbox v-for="p in perms" :key="p.id" v-show="p.isMenu === '0'" :label="p">
-                            {{ p.name }}</el-checkbox>
-                    </el-checkbox-group>
+                <el-form-item label="作业车辆" prop="driverId">
+                    <el-select v-model="form.vehicleId" placeholder="请选择作业车辆">
+                        <el-option v-for="v in vehicles" :key="v.id" :label="v.plateNo" :value="v.id"></el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="操作权限" prop="ops">
-                    <el-checkbox-group v-model="form.perms">
-                        <el-checkbox v-for="p in perms" :key="p.id" v-show="p.isMenu === '1'" :label="p.id"
-                            :checked="form.perms.includes(p)">
-                            {{ p.name }}</el-checkbox>
-                    </el-checkbox-group>
+                <el-form-item label="备注说明" prop="remark">
+                    <el-input v-model="form.remark" placeholder="建议为作业人员提供部分作业须知"></el-input>
                 </el-form-item>
             </el-form>
         </FormDrawer>
@@ -159,6 +160,7 @@
 <script setup>
 import { ref } from "vue";
 import { queryList, changeStatus, moduleObjAdd, moduleObjUpdate } from "@/api/admin";
+import { getSelectList } from "@/api/common";
 import { customNotification, getTimestampConversion } from "@/composables/util";
 import FormDrawer from "@/layouts/components/FormDrawer.vue";
 import InfoDrawer from "@/layouts/components/InfoDrawer.vue";
@@ -193,6 +195,9 @@ const {
                 return o;
             });
             total.value = res.data.data.total;
+            whs.value = res.data.data.whs;
+            drivers.value = res.data.data.drivers;
+            vehicles.value = res.data.data.vehicles;
         } else {
             customNotification("error", res.data.msg);
         }
@@ -212,9 +217,13 @@ const {
     form: {
         id: 0,
         driver: "",
+        driverId: null,
         vehicle: "",
+        vehicleId: null,
         startWh: "",
+        startWhId: null,
         endWh: "",
+        endWhId: null,
         startKeeper: "",
         startTime: 0,
         endKeeper: "",
@@ -260,4 +269,5 @@ const updateRoleRules = {}
 
 :deep(.el-checkbox) {
     @apply mr-6 !important;
-}</style>
+}
+</style>

@@ -16,8 +16,10 @@ export default defineConfig({
     }
   },
   server: {
+    hmr: true,
     host: '0.0.0.0',
     port: 8899,
+    strictPort: true,
     // open: true,
     // 允许跨域
     cors: true,

@@ -11,3 +11,7 @@ export function checkUsername(username) {
     headers: { "Content-Type": "application/json" },
   });
 }
+
+export function getSelectList(module) {
+  return axios.get(`/common/${module}/select/list`);
+}

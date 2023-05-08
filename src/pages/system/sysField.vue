@@ -27,7 +27,7 @@
 
         <!-- 新增 | 刷新 -->
         <div class="flex items-center justify-between mb-4">
-            <el-button type="primary" @click="handleCreate()">新增权限</el-button>
+            <el-button type="primary" @click="handleCreate()">新增参数</el-button>
             <el-tooltip content="刷新数据" placement="top" effect="dark">
                 <el-button text @click="getData()">
                     <el-icon :size="30">
@@ -102,22 +102,23 @@
             <el-form :model="form" ref="formRef" :rules="optId === 0 ? addRoleRules : updateRoleRules"
                 :validate-on-rule-change="false" label-width="80px">
                 <el-form-item label="名称" prop="name">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="form.name" />
                 </el-form-item>
                 <el-form-item label="关键字" prop="key">
-                    <el-input v-model="form.key"></el-input>
+                    <el-input v-model="form.key" />
                 </el-form-item>
-                <el-form-item label="参数类型" prop="isMenu">
-                    <el-radio-group v-model="form.type" @change="form.type === '0' ? form.value = null : form.str = null">
+                <el-form-item label="参数类型" prop="type">
+                    <el-radio-group v-model="form.type">
                         <el-radio label="0">字符串</el-radio>
                         <el-radio label="1">数值</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="参数值" prop="path">
-                    <el-input :v-model="form.type === '0' ? form.str : form.value" :type="form.type === '0' ? 'text' : 'number'"/>
+                <el-form-item label="参数值" prop="val">
+                    <el-input v-model="form.str " v-if="form.type == '0'" />
+                    <el-input v-model="form.value" v-else oninput="value=value.replace(/[^0-9.]/g,'')" />
                 </el-form-item>
                 <el-form-item label="备注说明" prop="remark">
-                    <el-input v-model="form.remark" placeholder="建议对参数做简单介绍"></el-input>
+                    <el-input v-model="form.remark" placeholder="建议对参数做简单介绍" />
                 </el-form-item>
             </el-form>
         </FormDrawer>
