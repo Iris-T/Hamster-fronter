@@ -14,6 +14,7 @@ import VehicleList from "@/pages/vehicle/list.vue";
 import WhList from "@/pages/wh/list.vue";
 import CargoList from "@/pages/cargo/list.vue";
 import TransList from "@/pages/trans/list.vue";
+import FinanceList from "@/pages/finance/list.vue";
 
 // 默认路由,所有用户共享
 const routes = [
@@ -124,6 +125,14 @@ const asyncRoutes = [
     component: TransList,
     meta: {
       title: "运输管理",  
+    }
+  },
+  {
+    path: "/finance/list",
+    name: "FinanceList",
+    component: FinanceList,
+    meta: {
+      title: "财务管理",
     }
   }
 ];

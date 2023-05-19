@@ -24,7 +24,7 @@
         </el-col>
       </template>
 
-      <el-col :span="6" v-for="(item, index) in staticInfo" :key="item.key">
+      <el-col :span="8" v-for="(item, index) in staticInfo" :key="item.key">
         <el-card shadow="hover">
           <template #header>
             <div class="flex justify-between">
