@@ -46,6 +46,11 @@
                     <span>{{ row.cargoName }}</span>
                 </template>
             </el-table-column>
+            <el-table-column label="起始地" align="center" width="200">
+                <template #default="{ row }">
+                    <span>{{ row.startWh }}</span>
+                </template>
+            </el-table-column>
             <el-table-column label="目的地" align="center" width="200">
                 <template #default="{ row }">
                     <span>{{ row.target }}</span>
@@ -53,7 +58,15 @@
             </el-table-column>
             <el-table-column label="运输费用" align="center" width="150">
                 <template #default="{ row }">
-                    <span>￥{{ (row.weight * row.space * row.distance * row.baseFee).toFixed(2) }}</span>
+                    <span>{{ Intl.NumberFormat("zh-CN", {
+                    style: "currency", // 货币形式
+                    currency: "CNY", // "CNY"是人民币
+                    currencyDisplay: "symbol", // 默认“symbol”，中文中代表“¥”符号
+                    useGrouping: true, // 是否使用分组分隔符，如千位分隔符或千/万/亿分隔符，默认为true
+                    // minimumIntegerDigits: 1, // 使用的整数数字的最小数目.可能的值是从1到21,默认值是1
+                    minimumFractionDigits: 2, // 使用的小数位数的最小数目.可能的值是从 0 到 20
+                    maximumFractionDigits: decimals, // 使用的小数位数的最大数目。可能的值是从 0 到 20
+                }).format(row.weight * row.space * row.distance * row.baseFee / 1000) }}</span>
                 </template>
             </el-table-column>
             <el-table-column label="作业司机" align="center" width="150">
@@ -97,7 +110,15 @@
                 <el-descriptions-item label="货物重量(kg)" align="left">{{ info.weight }}</el-descriptions-item>
                 <el-descriptions-item label="货物占地(m³)" align="left">{{ info.space }}</el-descriptions-item>
                 <el-descriptions-item label="运输距离(km)" align="left">{{ info.distance.toFixed(2) }}</el-descriptions-item>
-                <el-descriptions-item label="费用基数(元/km·kg·m³)" align="left">{{ info.baseFee }}</el-descriptions-item>
+                <el-descriptions-item label="费用基数(元/t·kg·m³)" align="left">{{ Intl.NumberFormat("zh-CN", {
+                    style: "currency", // 货币形式
+                    currency: "CNY", // "CNY"是人民币
+                    currencyDisplay: "symbol", // 默认“symbol”，中文中代表“¥”符号
+                    useGrouping: true, // 是否使用分组分隔符，如千位分隔符或千/万/亿分隔符，默认为true
+                    // minimumIntegerDigits: 1, // 使用的整数数字的最小数目.可能的值是从1到21,默认值是1
+                    minimumFractionDigits: 2, // 使用的小数位数的最小数目.可能的值是从 0 到 20
+                    maximumFractionDigits: decimals, // 使用的小数位数的最大数目。可能的值是从 0 到 20
+                }).format(info.baseFee) }}</el-descriptions-item>
                 <el-descriptions-item label="计算公式" align="left">费用基数*货物重量*占地空间*运输距离</el-descriptions-item>
             </el-descriptions>
         </InfoDrawer>

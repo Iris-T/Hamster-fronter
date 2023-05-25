@@ -50,7 +50,7 @@
             </el-table-column>
             <el-table-column label="委托客户" align="center" width="200">
                 <template #default="{ row }">
-                    <span>{{ row.cooperativeName }}</span>
+                    <span>{{ row.cooperativeName || "个人用户" }}</span>
                 </template>
             </el-table-column>
             <el-table-column label="目的地" align="center" width="200">

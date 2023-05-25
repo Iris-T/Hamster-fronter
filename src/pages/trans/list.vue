@@ -44,7 +44,7 @@
 
         <el-table :data="tableData" style="width: 100%" v-loading="loading" size="small">
 
-            <el-table-column label="运输编号" align="center">
+            <el-table-column label="运输编号" align="center" width="160">
                 <template #default="{ row }">
                     <span>{{ row.id }}</span>
                 </template>
@@ -60,10 +60,20 @@
                     <span>{{ row.vehicle }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="运输状态" align="center" width="500">
+            <el-table-column label="起始地" align="center" width="200">
+                <template #default="{ row }">
+                    <span>{{ row.startWh }}</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="终止地" align="center" width="200">
+                <template #default="{ row }">
+                    <span>{{ row.endWh }}</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="运输状态" align="center" width="400">
                 <template #default="{ row }">
                     <el-radio-group v-model="row.status" @change="handleStatusChange(row, $event)"
-                        :disabled="row.status == '2' || row.status == '3'">
+                        :disabled="row.status == '3'">
                         <el-radio-button label="0">未确认</el-radio-button>
                         <el-radio-button label="1">未开始</el-radio-button>
                         <el-radio-button label="2">运输中</el-radio-button>
@@ -81,7 +91,7 @@
                             </el-icon>
                         </el-tooltip>
                     </div>
-                    <div class="op-icon" v-if="scope.row.status == '2' || scope.row.status == '3'"
+                    <div class="op-icon" v-if="scope.row.status != '3'"
                         @click="handleUpdate(scope.row)">
                         <el-tooltip content="修改" placement="bottom">
                             <el-icon>
@@ -128,30 +138,19 @@
             </el-form>
         </FormDrawer>
 
-        <InfoDrawer ref="infoDrawerRef" title="角色详细信息" destoryOnClose>
+        <InfoDrawer ref="infoDrawerRef" title="运单详细信息" destoryOnClose>
             <el-descriptions :title="info.name" :column="2" size="large">
-                <el-descriptions-item label="关键字" align="left">{{ info.key }}</el-descriptions-item>
+                <el-descriptions-item label="发出地" align="left">{{ info.startWh }}</el-descriptions-item>
+                <el-descriptions-item label="目的地" align="left">{{ info.endWh }}</el-descriptions-item>
+                <el-descriptions-item label="作业人员" align="left">{{ info.driver }}</el-descriptions-item>
+                <el-descriptions-item label="作业车辆" align="left">{{ info.vehicle }}</el-descriptions-item>
                 <el-descriptions-item label="备注" align="left">{{ info.remark }}</el-descriptions-item>
             </el-descriptions>
             <el-descriptions :column="1" size="large">
-                <el-descriptions-item label="创建时间" align="left">{{ getTimestampConversion(info.createTime) }},{{
-                    info.createBy ? info.createBy : "系统原始" }}创建</el-descriptions-item>
-                <el-descriptions-item label="最近更新" align="left">{{ getTimestampConversion(info.createTime) }},{{
-                    info.createBy ? info.createBy : "系统原始" }}更新</el-descriptions-item>
-            </el-descriptions>
-            <el-descriptions :column="1" size="large">
-                <el-descriptions-item label="菜单权限">
-                    <span v-show="info.perms" v-for="p in info.perms" :key="p.id">
-                        <el-tag class="info-tag" v-show="p.isMenu === '0'" type="success" effect="plain" round>
-                            {{ p.name }}</el-tag>
-                    </span>
-                </el-descriptions-item>
-                <el-descriptions-item label="操作权限">
-                    <span v-show="p.status === '0'" v-for="p in info.perms" :key="p.id">
-                        <el-tag class="info-tag" v-show="p.isMenu === '1'" type="" effect="plain" round>
-                            {{ p.name }}</el-tag>
-                    </span>
-                </el-descriptions-item>
+                <el-descriptions-item label="创建时间" align="left">{{ getTimestampConversion(info.startTime)
+                }}任务创建</el-descriptions-item>
+                <el-descriptions-item label="最近更新" align="left">{{ getTimestampConversion(info.endTime)
+                }}任务结束</el-descriptions-item>
             </el-descriptions>
         </InfoDrawer>
     </el-card>
@@ -160,7 +159,6 @@
 <script setup>
 import { ref } from "vue";
 import { queryList, changeStatus, moduleObjAdd, moduleObjUpdate } from "@/api/admin";
-import { getSelectList } from "@/api/common";
 import { customNotification, getTimestampConversion } from "@/composables/util";
 import FormDrawer from "@/layouts/components/FormDrawer.vue";
 import InfoDrawer from "@/layouts/components/InfoDrawer.vue";
@@ -216,17 +214,15 @@ const {
     module: module,
     form: {
         id: 0,
-        driver: "",
         driverId: null,
-        vehicle: "",
         vehicleId: null,
-        startWh: "",
         startWhId: null,
-        endWh: "",
         endWhId: null,
-        startKeeper: "",
+        driver: "",
+        vehicle: "",
+        startWh: "",
+        endWh: "",
         startTime: 0,
-        endKeeper: "",
         endTime: 0,
         status: "0",
         remark: ""
