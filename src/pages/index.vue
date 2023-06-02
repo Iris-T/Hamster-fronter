@@ -35,15 +35,7 @@
             </div>
           </template>
           <span class="text-5xl font-bold text-gray-500 flex justify-center">
-            <CountTo v-if="item.unit == '人民币/元'" :value="Intl.NumberFormat('zh-CN', {
-                    style: 'currency',
-                    currency: 'CNY',
-                    currencyDisplay: 'symbol',
-                    useGrouping: true,
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: decimals,
-                }).format(item.value)" />
-            <CountTo v-else :value="item.value" />
+            <CountTo :value=Number(item.value) :isDecimal="item.unit == '人民币/元' ? true : false" />
           </span>
           <el-divider />
           <div class="flex justify-between text-sm text-gray-500">

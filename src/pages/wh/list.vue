@@ -116,7 +116,7 @@
             <small class="ml-6 text-gray-500">共{{ total }}条数据</small>
         </div>
 
-        <FormDrawer ref="formDrawerRef" :title="drawerTitle" destoryOnClose @submit="handleSubmit()">
+        <FormDrawer ref="formDrawerRef" title="更新仓库信息" destoryOnClose @submit="handleSubmit()">
             <el-form :model="form" ref="formRef" :rules="optId === 0 ? addRoleRules : updateRoleRules"
                 :validate-on-rule-change="false" label-width="80px">
                 <el-form-item label="仓库名称" prop="name">

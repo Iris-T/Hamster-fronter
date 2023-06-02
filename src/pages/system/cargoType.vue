@@ -69,7 +69,7 @@
             </el-table-column>
             <el-table-column label="操作" align="center" width="160">
                 <template #default="scope">
-                    <div v-if="scope.row.canUp !== '1'">
+                    <div v-if="scope.row.canUp == 0">
                         <div class="op-icon" @click="openInfoDrawer(scope.row)">
                             <el-tooltip content="查看" placement="bottom">
                                 <el-icon>
@@ -107,10 +107,10 @@
                 <el-form-item label="关键字" prop="key">
                     <el-input v-model="form.key"></el-input>
                 </el-form-item>
-                <el-form-item label="参数类型" prop="isMenu">
-                    <el-radio-group v-model="form.type" @change="form.type === '0' ? form.value = null : form.str = null">
-                        <el-radio label="0">字符串</el-radio>
-                        <el-radio label="1">数值</el-radio>
+                <el-form-item label="能否修改" prop="isMenu">
+                    <el-radio-group v-model="form.canUp">
+                        <el-radio label="0">可以修改</el-radio>
+                        <el-radio label="1">不可修改</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="参数值" prop="path">
@@ -125,11 +125,9 @@
 
         <InfoDrawer ref="infoDrawerRef" title="菜单/权限详细信息" destoryOnClose>
             <el-descriptions :title="info.name" :column="2" size="large">
-                <el-descriptions-item label="参数类型" align="left">{{ info.type === '0' ? '字符串' : '数值'
-                }}</el-descriptions-item>
-                <el-descriptions-item label="参数值" align="left">{{ info.type === '0' ? info.str : info.value
-                }}</el-descriptions-item>
+                <el-descriptions-item label="类型名称" align="left">{{ info.name }}</el-descriptions-item>
                 <el-descriptions-item label="关键字" align="left">{{ info.key }}</el-descriptions-item>
+                <el-descriptions-item label="能否修改" align="left">{{ info.canUp == '0' ? "可以修改" : "不可修改" }}</el-descriptions-item>
                 <el-descriptions-item label="备注" align="left">
                     <span v-if="info.remark">{{ info.remark }}</span>
                     <span v-else>无备注</span>
